@@ -18,10 +18,13 @@ import java.util.List;
 import java.util.Set;
 
 /*
- * Version: v0.18.0
+ * Version: v0.19.0
  * SPDX-License-Identifier: MIT
  *
  * Changelog
+ *
+ * - 0.19.0 (2026-11-01)
+ *      - Add Shift+Tab and Enter to the default extra keys; keep page keys on Home/End popups.
  *
  * - 0.1.0 (2021-03-11)
  *      - Initial Release.
@@ -326,7 +329,7 @@ public final class TermuxPropertyConstants {
     /** Defines the key for extra keys */
     public static final String KEY_EXTRA_KEYS =  "extra-keys"; // Default: "extra-keys"
     //public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[[ESC, TAB, CTRL, ALT, {key: '-', popup: '|'}, DOWN, UP]]"; // Single row
-    public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[['ESC','/',{key: '-', popup: '|'},'HOME','UP','END','PGUP'], ['TAB','CTRL','ALT','LEFT','DOWN','RIGHT','PGDN']]"; // Double row
+    public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[['ESC','TAB',{macro: 'SHIFT TAB', display: '⇧Tab'},{key: 'HOME', popup: 'PGUP'},'UP',{key: 'END', popup: 'PGDN'},{key: '-', popup: '|'}], ['CTRL','ALT','/','LEFT','DOWN','RIGHT','ENTER']]"; // Double row
 
     /** Defines the key for extra keys style */
     public static final String KEY_EXTRA_KEYS_STYLE =  "extra-keys-style"; // Default: "extra-keys-style"

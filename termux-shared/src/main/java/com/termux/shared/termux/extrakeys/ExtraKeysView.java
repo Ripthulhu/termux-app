@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import android.widget.GridLayout;
 import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.TextViewCompat;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
@@ -410,9 +412,16 @@ public final class ExtraKeysView extends GridLayout {
                 }
 
                 button.setText(buttonInfo.getDisplay());
+                if ("SHIFT TAB".equals(buttonInfo.getKey()))
+                    button.setContentDescription("Shift+Tab");
                 button.setTextColor(mButtonTextColor);
                 button.setAllCaps(mButtonTextAllCaps);
                 button.setPadding(0, 0, 0, 0);
+                // Fit key names on one line in narrow windows and with larger system text.
+                button.setMaxLines(1);
+                int textSize = Math.round(button.getTextSize());
+                TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(button,
+                    textSize / 2, textSize, 1, TypedValue.COMPLEX_UNIT_PX);
 
                 button.setOnClickListener(view -> {
                     performExtraKeyButtonHapticFeedback(view, buttonInfo, button);
