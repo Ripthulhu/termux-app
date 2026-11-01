@@ -1,7 +1,6 @@
 package com.termux.app;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.PictureInPictureParams;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -30,11 +29,15 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.termux.R;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.termux.app.api.file.FileReceiverActivity;
 import com.termux.app.terminal.TermuxActivityRootView;
 import com.termux.app.terminal.TermuxTerminalSessionActivityClient;
@@ -71,6 +74,7 @@ import com.termux.view.TerminalViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.ChecksSdkIntAtLeast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
@@ -187,6 +191,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     private int mNavBarHeight;
 
     private float mTerminalToolbarDefaultHeight;
+    private boolean mSessionPanelExpanded;
 
 
     private static final int CONTEXT_MENU_SELECT_URL_ID = 0;
@@ -271,6 +276,15 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setTerminalToolbarView(savedInstanceState);
 
         setSessionDrawerView();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() {
+                if (!mSessionPanelExpanded && getDrawer().isDrawerVisible(GravityCompat.START))
+                    closeSessionDrawer();
+                else
+                    finishActivityIfNotFinishing();
+            }
+        });
 
         setPictureInPictureView();
 
@@ -370,7 +384,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         removeTermuxActivityRootViewGlobalLayoutListener();
 
         unregisterTermuxActivityBroadcastReceiver();
-        getDrawer().closeDrawers();
+        closeSessionDrawer();
     }
 
     @Override
@@ -561,9 +575,11 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         if (terminalToolbarViewPager == null) return;
 
         ViewGroup.LayoutParams layoutParams = terminalToolbarViewPager.getLayoutParams();
-        layoutParams.height = Math.round(mTerminalToolbarDefaultHeight *
-            (mTermuxTerminalExtraKeys.getExtraKeysInfo() == null ? 0 : mTermuxTerminalExtraKeys.getExtraKeysInfo().getMatrix().length) *
-            mProperties.getTerminalToolbarHeightScaleFactor()) + terminalToolbarViewPager.getPaddingBottom();
+        float rowHeight = Math.max(mTerminalToolbarDefaultHeight * mProperties.getTerminalToolbarHeightScaleFactor(),
+            48 * getResources().getDisplayMetrics().density);
+        layoutParams.height = Math.round(rowHeight *
+            (mTermuxTerminalExtraKeys.getExtraKeysInfo() == null ? 0 : mTermuxTerminalExtraKeys.getExtraKeysInfo().getMatrix().length)) +
+            terminalToolbarViewPager.getPaddingBottom();
         terminalToolbarViewPager.setLayoutParams(layoutParams);
     }
 
@@ -593,6 +609,18 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
 
     private void setSessionDrawerView() {
+        findViewById(R.id.left_drawer).addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            LinearLayout header = findViewById(R.id.session_panel_header);
+            TextView title = findViewById(R.id.session_panel_title);
+            float requiredWidth = title.getPaint().measureText(title.getText().toString()) +
+                title.getPaddingStart() + 144 * getResources().getDisplayMetrics().density;
+            boolean stacked = right - left < requiredWidth;
+            int orientation = stacked ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL;
+            if (header.getOrientation() == orientation) return;
+            header.setOrientation(orientation);
+            title.setLayoutParams(new LinearLayout.LayoutParams(stacked ? ViewGroup.LayoutParams.MATCH_PARENT : 0,
+                ViewGroup.LayoutParams.WRAP_CONTENT, stacked ? 0 : 1));
+        });
         // Keep Android's edge Back gesture free; explicit controls can still open a locked drawer.
         getDrawer().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         getDrawer().addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
@@ -609,9 +637,74 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         findViewById(R.id.sessions_button).setOnClickListener(v -> {
             mTerminalView.stopTextSelectionMode();
             KeyboardUtils.hideSoftKeyboard(this, mTerminalView);
-            getDrawer().openDrawer(GravityCompat.START);
+            openSessionDrawer();
         });
-        findViewById(R.id.close_sessions_button).setOnClickListener(v -> getDrawer().closeDrawer(GravityCompat.START));
+        findViewById(R.id.close_sessions_button).setOnClickListener(v -> closeSessionDrawer());
+        findViewById(R.id.activity_termux_root_relative_layout).addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+            updateSessionPanel(right - left));
+        int surface = MaterialColors.getColor(findViewById(R.id.terminal_navigation_bar),
+            com.google.android.material.R.attr.colorSurface);
+        WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+            .setAppearanceLightStatusBars(MaterialColors.isColorLight(surface));
+        WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+            .setAppearanceLightNavigationBars(MaterialColors.isColorLight(surface));
+    }
+
+    private void updateSessionPanel(int width) {
+        if (width <= 0) return;
+        float density = getResources().getDisplayMetrics().density;
+        boolean expanded = width / density >= 840 &&
+            !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInPictureInPictureMode());
+        View panel = findViewById(R.id.left_drawer);
+        int compactWidth = Math.min(Math.round(320 * density), Math.max(0, width - Math.round(16 * density)));
+        if (!expanded && panel.getParent() == getDrawer()) {
+            DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) panel.getLayoutParams();
+            if (params.width != compactWidth) {
+                params.width = compactWidth;
+                panel.setLayoutParams(params);
+            }
+        }
+        if (mSessionPanelExpanded == expanded) return;
+        if (panel.getParent() == getDrawer()) getDrawer().closeDrawer(GravityCompat.START, false);
+        ((ViewGroup) panel.getParent()).removeView(panel);
+        mSessionPanelExpanded = expanded;
+        int panelWidth = expanded ? Math.round(320 * density) : 0;
+        RelativeLayout.LayoutParams drawerParams = (RelativeLayout.LayoutParams) getDrawer().getLayoutParams();
+        drawerParams.setMarginStart(panelWidth);
+        getDrawer().setLayoutParams(drawerParams);
+        RelativeLayout.LayoutParams keysParams = (RelativeLayout.LayoutParams) getTerminalToolbarViewPager().getLayoutParams();
+        keysParams.setMarginStart(panelWidth);
+        getTerminalToolbarViewPager().setLayoutParams(keysParams);
+        findViewById(R.id.sessions_button).setVisibility(expanded ? View.GONE : View.VISIBLE);
+        panel.findViewById(R.id.close_sessions_button).setVisibility(expanded ? View.GONE : View.VISIBLE);
+        if (expanded) {
+            RelativeLayout.LayoutParams panelParams = new RelativeLayout.LayoutParams(panelWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+            panelParams.addRule(RelativeLayout.BELOW, R.id.terminal_navigation_bar);
+            panelParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+            panelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            ((ViewGroup) findViewById(R.id.activity_termux_root_relative_layout)).addView(panel, panelParams);
+            panel.setVisibility(View.VISIBLE);
+        } else {
+            DrawerLayout.LayoutParams panelParams = new DrawerLayout.LayoutParams(compactWidth, ViewGroup.LayoutParams.MATCH_PARENT, GravityCompat.START);
+            getDrawer().addView(panel, panelParams);
+        }
+        // DrawerLayout hides its content from accessibility while a modal drawer is open.
+        panel.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
+        mTerminalView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+    }
+
+    public void openSessionDrawer() {
+        if (mSessionPanelExpanded) findViewById(R.id.terminal_sessions_list).requestFocus();
+        else getDrawer().openDrawer(GravityCompat.START, shouldAnimateSessionDrawer());
+    }
+
+    public void closeSessionDrawer() {
+        if (!mSessionPanelExpanded) getDrawer().closeDrawer(GravityCompat.START, shouldAnimateSessionDrawer());
+    }
+
+    private boolean shouldAnimateSessionDrawer() {
+        return android.provider.Settings.Global.getFloat(getContentResolver(),
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0;
     }
 
     @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O)
@@ -674,11 +767,12 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void updatePictureInPictureViews(boolean inPictureInPictureMode) {
         if (mPreferences == null) return;
+        updateSessionPanel(findViewById(R.id.activity_termux_root_relative_layout).getWidth());
         findViewById(R.id.terminal_navigation_bar).setVisibility(inPictureInPictureMode ? View.GONE : View.VISIBLE);
         getTerminalToolbarViewPager().setVisibility(!inPictureInPictureMode &&
             mPreferences.shouldShowTerminalToolbar() ? View.VISIBLE : View.GONE);
         if (inPictureInPictureMode) {
-            getDrawer().closeDrawers();
+            closeSessionDrawer();
             KeyboardUtils.hideSoftKeyboard(this, mTerminalView);
         }
     }
@@ -706,7 +800,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     private void setToggleKeyboardView() {
         findViewById(R.id.toggle_keyboard_button).setOnClickListener(v -> {
             mTermuxTerminalViewClient.onToggleSoftKeyboardRequest();
-            getDrawer().closeDrawers();
+            closeSessionDrawer();
         });
 
         findViewById(R.id.toggle_keyboard_button).setOnLongClickListener(v -> {
@@ -718,16 +812,6 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
 
 
-
-    @SuppressLint("RtlHardcoded")
-    @Override
-    public void onBackPressed() {
-        if (getDrawer().isDrawerOpen(Gravity.LEFT)) {
-            getDrawer().closeDrawers();
-        } else {
-            finishActivityIfNotFinishing();
-        }
-    }
 
     public void finishActivityIfNotFinishing() {
         // prevent duplicate calls to finish() if called from multiple places
@@ -834,7 +918,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     private void showKillSessionDialog(TerminalSession session) {
         if (session == null) return;
 
-        final AlertDialog.Builder b = new AlertDialog.Builder(this);
+        final AlertDialog.Builder b = new MaterialAlertDialogBuilder(this);
         b.setIcon(android.R.drawable.ic_dialog_alert);
         b.setMessage(R.string.title_confirm_kill_process);
         b.setPositiveButton(android.R.string.yes, (dialog, id) -> {
@@ -863,7 +947,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         } catch (ActivityNotFoundException | IllegalArgumentException e) {
             // The startActivity() call is not documented to throw IllegalArgumentException.
             // However, crash reporting shows that it sometimes does, so catch it here.
-            new AlertDialog.Builder(this).setMessage(getString(R.string.error_styling_not_installed))
+            new MaterialAlertDialogBuilder(this).setMessage(getString(R.string.error_styling_not_installed))
                 .setPositiveButton(R.string.action_styling_install,
                     (dialog, which) -> ActivityUtils.startActivity(this, new Intent(Intent.ACTION_VIEW, Uri.parse(TermuxConstants.TERMUX_STYLING_FDROID_PACKAGE_URL))))
                 .setNegativeButton(android.R.string.cancel, null).show();

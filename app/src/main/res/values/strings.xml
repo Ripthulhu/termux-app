@@ -12,6 +12,7 @@
     ]>
 
 <resources>
+    <string name="hint_terminal_text_input">Type terminal input</string>
 
     <string name="application_name">&TERMUX_APP_NAME;</string>
     <string name="shared_user_label">&TERMUX_APP_NAME; user</string>

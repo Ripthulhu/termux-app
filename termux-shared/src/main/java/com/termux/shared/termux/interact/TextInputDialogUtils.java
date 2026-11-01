@@ -1,7 +1,8 @@
 package com.termux.shared.termux.interact;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.DialogInterface;
 import android.text.Selection;
 import android.util.TypedValue;
@@ -47,7 +48,7 @@ public final class TextInputDialogUtils {
         layout.setPadding(paddingTopAndSides, paddingTopAndSides, paddingTopAndSides, paddingBottom);
         layout.addView(input);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(activity)
             .setTitle(titleText).setView(layout)
             .setPositiveButton(positiveButtonText, (d, whichButton) -> onPositive.onTextSet(input.getText().toString()));
 

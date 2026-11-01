@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAlertDialog;
+import org.robolectric.shadows.ShadowDialog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,13 +37,16 @@ public class TermuxNavigationTest {
     @Test
     @Config(sdk = 30)
     public void rejectedInputIsExplainedForTheVisibleTerminal() {
+        android.app.Application app = org.robolectric.RuntimeEnvironment.getApplication();
+        shadowOf(app).declareComponentUnbindable(new android.content.ComponentName(app, TermuxService.class));
         TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
         TerminalSession terminal = new TerminalSession("/system/bin/sh", "/", new String[0], new String[0], 100, null);
         ReflectionHelpers.setField(activity.getTerminalView(), "mTermSession", terminal);
         ReflectionHelpers.setField(activity, "mIsVisible", true);
         activity.getTermuxTerminalSessionClient().onInputRejected(terminal);
+        shadowOf(android.os.Looper.getMainLooper()).idle();
         assertEquals(activity.getString(R.string.msg_terminal_input_busy),
-            org.robolectric.shadows.ShadowToast.getTextOfLatestToast());
+            ((TextView) activity.findViewById(com.google.android.material.R.id.snackbar_text)).getText().toString());
     }
 
     @Test
@@ -76,7 +79,7 @@ public class TermuxNavigationTest {
         TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
         activity.findViewById(R.id.resume_codex_button).performClick();
         assertEquals(activity.getString(R.string.msg_codex_not_installed),
-            shadowOf(ShadowAlertDialog.getLatestAlertDialog()).getMessage());
+            ((TextView) ShadowDialog.getLatestDialog().findViewById(android.R.id.message)).getText());
     }
 
     @Test

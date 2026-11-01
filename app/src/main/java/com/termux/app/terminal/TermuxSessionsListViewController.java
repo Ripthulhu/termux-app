@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import com.google.android.material.color.MaterialColors;
 
 import com.termux.R;
 import com.termux.app.TermuxActivity;
@@ -59,9 +59,13 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
         sessionSubtitleView.setText(sessionRunning ? (!TextUtils.isEmpty(sessionTitle) ? sessionTitle :
             mActivity.getString(R.string.session_running)) :
             mActivity.getString(R.string.session_exited, sessionAtRow.getExitStatus()));
-        sessionSubtitleView.setTextColor(ContextCompat.getColor(mActivity,
-            sessionRunning || sessionAtRow.getExitStatus() == 0 ? com.termux.shared.R.color.terminal_text_secondary : com.termux.shared.R.color.terminal_error));
-        sessionRowView.setActivated(sessionAtRow == mActivity.getCurrentSession());
+        boolean selected = sessionAtRow == mActivity.getCurrentSession();
+        sessionRowView.setActivated(selected);
+        sessionTitleView.setTextColor(MaterialColors.getColor(sessionRowView, selected ?
+            com.google.android.material.R.attr.colorOnSecondaryContainer : com.google.android.material.R.attr.colorOnSurface));
+        sessionSubtitleView.setTextColor(MaterialColors.getColor(sessionRowView,
+            !sessionRunning && sessionAtRow.getExitStatus() != 0 ? com.google.android.material.R.attr.colorError :
+                selected ? com.google.android.material.R.attr.colorOnSecondaryContainer : com.google.android.material.R.attr.colorOnSurfaceVariant));
         return sessionRowView;
     }
 
@@ -69,7 +73,7 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TermuxSession clickedSession = getItem(position);
         mActivity.getTermuxTerminalSessionClient().setCurrentSession(clickedSession.getTerminalSession());
-        mActivity.getDrawer().closeDrawers();
+        mActivity.closeSessionDrawer();
     }
 
     @Override

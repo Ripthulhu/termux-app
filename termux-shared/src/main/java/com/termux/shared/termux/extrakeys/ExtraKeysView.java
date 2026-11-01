@@ -32,7 +32,6 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.TextViewCompat;
-import androidx.core.content.ContextCompat;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
@@ -410,30 +409,27 @@ public final class ExtraKeysView extends GridLayout {
                     button = createSpecialButton(buttonInfo.getKey(), true);
                     if (button == null) return;
                 } else {
-                    button = new MaterialButton(getContext(), null, android.R.attr.buttonBarButtonStyle);
+                    button = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
                 }
 
                 button.setText(buttonInfo.getDisplay());
                 if ("SHIFT TAB".equals(buttonInfo.getKey()))
                     button.setContentDescription("Shift+Tab");
-                button.setTextColor(mButtonTextColor);
                 button.setAllCaps(mButtonTextAllCaps);
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                TextViewCompat.setTextAppearance(button, com.google.android.material.R.style.TextAppearance_Material3_LabelMedium);
+                button.setTextColor(mButtonTextColor);
                 button.setLetterSpacing(0);
-                button.setBackgroundColor(mButtonBackgroundColor);
+                button.setBackgroundTintList(ColorStateList.valueOf(mButtonBackgroundColor));
                 int inset = Math.round(3 * getResources().getDisplayMetrics().density);
                 button.setCornerRadius(inset * 2);
                 button.setInsetTop(inset);
                 button.setInsetBottom(inset);
-                button.setStrokeWidth(Math.max(1, Math.round(getResources().getDisplayMetrics().density)));
-                button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.terminal_outline)));
+                button.setStrokeWidth(0);
+                button.setMinWidth(Math.round(48 * getResources().getDisplayMetrics().density));
+                button.setMinimumWidth(Math.round(48 * getResources().getDisplayMetrics().density));
                 int horizontalPadding = Math.round(4 * getResources().getDisplayMetrics().density);
                 button.setPadding(horizontalPadding, 0, horizontalPadding, 0);
-                // Fit key names on one line in narrow windows and with larger system text.
                 button.setMaxLines(1);
-                int textSize = Math.round(button.getTextSize());
-                TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(button,
-                    textSize / 2, textSize, 1, TypedValue.COMPLEX_UNIT_PX);
 
                 button.setOnClickListener(view -> {
                     performExtraKeyButtonHapticFeedback(view, buttonInfo, button);
@@ -443,7 +439,8 @@ public final class ExtraKeysView extends GridLayout {
                 button.setOnTouchListener((view, event) -> {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            view.setBackgroundColor(mButtonActiveBackgroundColor);
+                            button.setPressed(true);
+                            button.setBackgroundTintList(ColorStateList.valueOf(mButtonActiveBackgroundColor));
                             // Start long press scheduled executors which will be stopped in next MotionEvent
                             startScheduledExecutors(view, buttonInfo, button);
                             return true;
@@ -453,23 +450,25 @@ public final class ExtraKeysView extends GridLayout {
                                 // Show popup on swipe up
                                 if (mPopupWindow == null && event.getY() < 0) {
                                     stopScheduledExecutors();
-                                    view.setBackgroundColor(mButtonBackgroundColor);
+                                    button.setBackgroundTintList(ColorStateList.valueOf(mButtonBackgroundColor));
                                     showPopup(view, buttonInfo.getPopup());
                                 }
                                 if (mPopupWindow != null && event.getY() > 0) {
-                                    view.setBackgroundColor(mButtonActiveBackgroundColor);
+                                    button.setBackgroundTintList(ColorStateList.valueOf(mButtonActiveBackgroundColor));
                                     dismissPopup();
                                 }
                             }
                             return true;
 
                         case MotionEvent.ACTION_CANCEL:
-                            view.setBackgroundColor(mButtonBackgroundColor);
+                            button.setPressed(false);
+                            button.setBackgroundTintList(ColorStateList.valueOf(mButtonBackgroundColor));
                             stopScheduledExecutors();
                             return true;
 
                         case MotionEvent.ACTION_UP:
-                            view.setBackgroundColor(mButtonBackgroundColor);
+                            button.setPressed(false);
+                            button.setBackgroundTintList(ColorStateList.valueOf(mButtonBackgroundColor));
                             stopScheduledExecutors();
                             // If ACTION_UP up was not from a repetitive key or was with a key with a popup button
                             if (mLongPressCount == 0 || mPopupWindow != null) {
@@ -491,13 +490,13 @@ public final class ExtraKeysView extends GridLayout {
                 });
 
                 LayoutParams param = new GridLayout.LayoutParams();
-                param.width = 0;
+                param.width = LayoutParams.WRAP_CONTENT;
                 if(Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
                    param.height = (int)(heightPx + 0.5);
                 } else {
                     param.height = 0;
                 }
-                int margin = Math.round(2 * getResources().getDisplayMetrics().density);
+                int margin = Math.round(4 * getResources().getDisplayMetrics().density);
                 param.setMargins(margin, 0, margin, 0);
                 param.columnSpec = GridLayout.spec(col, GridLayout.FILL, 1.f);
                 param.rowSpec = GridLayout.spec(row, GridLayout.FILL, 1.f);
@@ -616,7 +615,7 @@ public final class ExtraKeysView extends GridLayout {
             button = createSpecialButton(extraButton.getKey(), false);
             if (button == null) return;
         } else {
-            button = new MaterialButton(getContext(), null, android.R.attr.buttonBarButtonStyle);
+            button = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
             button.setTextColor(mButtonTextColor);
         }
         button.setText(extraButton.getDisplay());
@@ -628,7 +627,7 @@ public final class ExtraKeysView extends GridLayout {
         button.setMinimumHeight(0);
         button.setWidth(width);
         button.setHeight(height);
-        button.setBackgroundColor(mButtonActiveBackgroundColor);
+        button.setBackgroundTintList(ColorStateList.valueOf(mButtonActiveBackgroundColor));
         mPopupWindow = new PopupWindow(this);
         mPopupWindow.setWidth(LayoutParams.WRAP_CONTENT);
         mPopupWindow.setHeight(LayoutParams.WRAP_CONTENT);
@@ -680,7 +679,7 @@ public final class ExtraKeysView extends GridLayout {
         SpecialButtonState state = mSpecialButtons.get(SpecialButton.valueOf(buttonKey));
         if (state == null) return null;
         state.setIsCreated(true);
-        MaterialButton button = new MaterialButton(getContext(), null, android.R.attr.buttonBarButtonStyle);
+        MaterialButton button = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
         button.setTextColor(state.isActive ? mButtonActiveTextColor : mButtonTextColor);
         if (needUpdate) {
             state.buttons.add(button);
