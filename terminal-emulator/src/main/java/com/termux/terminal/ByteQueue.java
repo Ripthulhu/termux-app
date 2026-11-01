@@ -57,8 +57,13 @@ final class ByteQueue {
      * Returns whether the output was totally written, false if it was closed before.
      */
     public boolean write(byte[] buffer, int offset, int lengthToWrite) {
-        if (lengthToWrite + offset > buffer.length) {
-            throw new IllegalArgumentException("length + offset > buffer.length");
+        return write(buffer, offset, lengthToWrite, true);
+    }
+
+    /** Nonblocking writes accept the entire input or leave the queue unchanged. */
+    public boolean write(byte[] buffer, int offset, int lengthToWrite, boolean block) {
+        if (offset < 0 || offset > buffer.length || lengthToWrite > buffer.length - offset) {
+            throw new IllegalArgumentException("Invalid buffer range");
         } else if (lengthToWrite <= 0) {
             throw new IllegalArgumentException("length <= 0");
         }
@@ -66,6 +71,7 @@ final class ByteQueue {
         final int bufferLength = mBuffer.length;
 
         synchronized (this) {
+            if (!block && lengthToWrite > bufferLength - mStoredBytes) return false;
             while (lengthToWrite > 0) {
                 while (bufferLength == mStoredBytes && mOpen) {
                     try {

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.system.ErrnoException;
+import android.system.Os;
+import android.system.OsConstants;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
@@ -29,6 +32,7 @@ import com.termux.shared.termux.settings.properties.TermuxPropertyConstants;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,6 +45,9 @@ public class FileReceiverActivity extends AppCompatActivity {
     static final String TERMUX_RECEIVEDIR = TermuxConstants.TERMUX_FILES_DIR_PATH + "/home/downloads";
     static final String EDITOR_PROGRAM = TermuxConstants.TERMUX_HOME_DIR_PATH + "/bin/termux-file-editor";
     static final String URL_OPENER_PROGRAM = TermuxConstants.TERMUX_HOME_DIR_PATH + "/bin/termux-url-opener";
+
+    // Linux flag on all supported ABIs; OsConstants exposes it only from API 27.
+    private static final int O_CLOEXEC = 0x80000;
 
     /**
      * If the activity should be finished when the name input dialog is dismissed. This is disabled
@@ -194,38 +201,71 @@ public class FileReceiverActivity extends AppCompatActivity {
                 finish();
             },
             android.R.string.cancel, text -> finish(), dialog -> {
+                try {
+                    if (in != null) in.close();
+                } catch (IOException e) {
+                    Logger.logStackTraceWithMessage(LOG_TAG, "Error closing shared content", e);
+                }
                 if (mFinishOnDismissNameDialog) finish();
             });
     }
 
     public File saveStreamWithName(InputStream in, String attachmentFileName) {
-        File receiveDir = new File(TERMUX_RECEIVEDIR);
-
-        if (DataUtils.isNullOrEmpty(attachmentFileName)) {
-            showErrorDialogAndQuit("File name cannot be null or empty");
-            return null;
-        }
-
-        if (!receiveDir.isDirectory() && !receiveDir.mkdirs()) {
-            showErrorDialogAndQuit("Cannot create directory: " + receiveDir.getAbsolutePath());
-            return null;
-        }
-
-        try {
-            final File outFile = new File(receiveDir, attachmentFileName);
-            try (FileOutputStream f = new FileOutputStream(outFile)) {
-                byte[] buffer = new byte[4096];
-                int readBytes;
-                while ((readBytes = in.read(buffer)) > 0) {
-                    f.write(buffer, 0, readBytes);
-                }
-            }
-            return outFile;
-        } catch (IOException e) {
-            showErrorDialogAndQuit("Error saving file:\n\n" + e);
+        try (InputStream source = in) {
+            return saveStreamWithName(source, attachmentFileName, new File(TERMUX_RECEIVEDIR));
+        } catch (IOException | RuntimeException e) {
+            showErrorDialogAndQuit("Error saving file:\n\n" + e.getMessage());
             Logger.logStackTraceWithMessage(LOG_TAG, "Error saving file", e);
             return null;
         }
+    }
+
+    static File saveStreamWithName(InputStream in, String attachmentFileName, File receiveDir) throws IOException {
+        if (attachmentFileName == null || attachmentFileName.isEmpty() ||
+            attachmentFileName.equals(".") || attachmentFileName.equals("..") ||
+            attachmentFileName.indexOf('/') >= 0 || attachmentFileName.indexOf('\\') >= 0 ||
+            attachmentFileName.indexOf('\0') >= 0) {
+            throw new IOException("Enter a file name without a folder path.");
+        }
+        if (in == null) throw new IOException("The shared content could not be opened.");
+        if (!receiveDir.isDirectory() && !receiveDir.mkdirs()) {
+            throw new IOException("Cannot create directory: " + receiveDir.getAbsolutePath());
+        }
+
+        File directory = receiveDir.getCanonicalFile();
+        File outFile = new File(directory, attachmentFileName);
+        if (!directory.equals(outFile.getCanonicalFile().getParentFile()))
+            throw new IOException("The file must stay inside the downloads folder.");
+        if (outFile.exists()) throw new IOException("A file with this name already exists. Choose another name.");
+
+        FileDescriptor descriptor;
+        try {
+            // Exclusive creation also refuses symlinks and files created after the checks above.
+            descriptor = Os.open(outFile.getPath(), OsConstants.O_WRONLY | OsConstants.O_CREAT |
+                OsConstants.O_EXCL | OsConstants.O_NOFOLLOW | O_CLOEXEC, 0600);
+        } catch (ErrnoException e) {
+            throw new IOException("Could not create the file. Choose an unused file name.", e);
+        }
+        try {
+            try (FileOutputStream output = new FileOutputStream(descriptor)) {
+                byte[] buffer = new byte[4096];
+                int readBytes;
+                while ((readBytes = in.read(buffer)) != -1) {
+                    output.write(buffer, 0, readBytes);
+                }
+            } finally {
+                // FileOutputStream(FileDescriptor) does not own its descriptor on Android.
+                try {
+                    if (descriptor.valid()) Os.close(descriptor);
+                } catch (ErrnoException e) {
+                    throw new IOException("Error closing the download.", e);
+                }
+            }
+        } catch (IOException | RuntimeException e) {
+            if (!outFile.delete()) Logger.logWarn(LOG_TAG, "Could not remove incomplete download");
+            throw e;
+        }
+        return outFile;
     }
 
     void handleUrlAndFinish(final String url) {

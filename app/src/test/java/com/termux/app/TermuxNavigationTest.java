@@ -36,6 +36,18 @@ public class TermuxNavigationTest {
 
     @Test
     @Config(sdk = 30)
+    public void rejectedInputIsExplainedForTheVisibleTerminal() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        TerminalSession terminal = new TerminalSession("/system/bin/sh", "/", new String[0], new String[0], 100, null);
+        ReflectionHelpers.setField(activity.getTerminalView(), "mTermSession", terminal);
+        ReflectionHelpers.setField(activity, "mIsVisible", true);
+        activity.getTermuxTerminalSessionClient().onInputRejected(terminal);
+        assertEquals(activity.getString(R.string.msg_terminal_input_busy),
+            org.robolectric.shadows.ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    @Config(sdk = 30)
     public void recycledSessionRowsClearOldNamesAndExitStatus() {
         TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
         TerminalSession terminal = new TerminalSession("/system/bin/sh", "/", new String[0], new String[0], 100, null);

@@ -16,6 +16,10 @@ public interface TerminalSessionClient {
 
     void onSessionFinished(@NonNull TerminalSession finishedSession);
 
+    default void onInputRejected(@NonNull TerminalSession session) {
+        logWarn("TerminalSession", "Input not sent: terminal input buffer is full or closed (1 MiB limit).");
+    }
+
     void onCopyTextToClipboard(@NonNull TerminalSession session, String text);
 
     void onPasteTextFromClipboard(@Nullable TerminalSession session);

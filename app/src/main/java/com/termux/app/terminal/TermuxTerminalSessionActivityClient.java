@@ -181,6 +181,13 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     }
 
     @Override
+    public void onInputRejected(@NonNull TerminalSession session) {
+        super.onInputRejected(session);
+        if (mActivity.isVisible() && session == mActivity.getCurrentSession())
+            mActivity.showToast(mActivity.getString(R.string.msg_terminal_input_busy), true);
+    }
+
+    @Override
     public void onCopyTextToClipboard(@NonNull TerminalSession session, String text) {
         if (!mActivity.isVisible()) return;
 
