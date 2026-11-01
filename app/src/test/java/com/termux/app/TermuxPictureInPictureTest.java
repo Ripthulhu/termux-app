@@ -4,7 +4,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.view.View;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.button.MaterialButton;
 import com.termux.R;
 
 import org.junit.Test;
@@ -28,13 +28,13 @@ public class TermuxPictureInPictureTest {
         shadowOf(RuntimeEnvironment.getApplication().getPackageManager())
             .setSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE, true);
         TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
-        MaterialCheckBox keepVisible = activity.findViewById(R.id.keep_terminal_visible_checkbox);
+        MaterialButton keepVisible = activity.findViewById(R.id.keep_terminal_visible_button);
         assertEquals(View.VISIBLE, keepVisible.getVisibility());
         assertFalse(keepVisible.isChecked());
         keepVisible.performClick();
         assertTrue(activity.getPreferences().shouldKeepTerminalVisible());
         TermuxActivity recreated = Robolectric.buildActivity(TermuxActivity.class).create().get();
-        assertTrue(((MaterialCheckBox) recreated.findViewById(R.id.keep_terminal_visible_checkbox)).isChecked());
+        assertTrue(((MaterialButton) recreated.findViewById(R.id.keep_terminal_visible_button)).isChecked());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TermuxPictureInPictureTest {
     @Config(sdk = 23)
     public void olderAndroidDoesNotOfferPictureInPicture() {
         TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
-        assertEquals(View.GONE, activity.findViewById(R.id.keep_terminal_visible_checkbox).getVisibility());
+        assertEquals(View.GONE, activity.findViewById(R.id.keep_terminal_visible_button).getVisibility());
         activity.onUserLeaveHint();
     }
 }

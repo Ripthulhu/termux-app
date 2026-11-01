@@ -1,0 +1,11 @@
+<resources>
+    <color name="terminal_surface">#101416</color>
+    <color name="terminal_surface_raised">#1C2327</color>
+    <color name="terminal_surface_active">#293F35</color>
+    <color name="terminal_outline">#344147</color>
+    <color name="terminal_text">#E5ECEF</color>
+    <color name="terminal_text_secondary">#A6B5BC</color>
+    <color name="terminal_accent">#B4DEC2</color>
+    <color name="terminal_on_accent">#153222</color>
+    <color name="terminal_error">#FFB4AB</color>
+</resources>

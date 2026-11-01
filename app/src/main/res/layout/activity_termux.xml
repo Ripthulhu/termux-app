@@ -21,38 +21,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="?attr/extraKeysButtonBackgroundColor"
+            android:background="@color/terminal_surface"
+            android:minHeight="56dp"
+            android:paddingHorizontal="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/sessions_button"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/action_open_sessions"
-                android:text="@string/title_terminal_sessions"
-                android:textColor="?attr/extraKeysButtonTextColor"
-                app:icon="@drawable/ic_menu"
-                app:iconTint="?attr/extraKeysButtonTextColor" />
+                android:tooltipText="@string/title_terminal_sessions"
+                android:src="@drawable/ic_menu"
+                app:tint="@color/terminal_text" />
 
-            <Space
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/keep_terminal_visible_checkbox"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:paddingEnd="8dp"
+                android:layout_weight="1"
+                android:paddingStart="8dp"
+                android:text="@string/application_name"
+                android:textColor="@color/terminal_text"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/keep_terminal_visible_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
                 android:visibility="gone"
-                android:text="@string/action_keep_terminal_visible"
+                android:tooltipText="@string/action_keep_terminal_visible"
                 android:contentDescription="@string/description_keep_terminal_visible"
-                android:textColor="?attr/extraKeysButtonTextColor"
-                app:buttonIconTint="?attr/extraKeysButtonBackgroundColor"
-                app:buttonTint="?attr/extraKeysButtonTextColor" />
+                android:checkable="true"
+                app:icon="@drawable/ic_picture_in_picture"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/terminal_toggle_icon"
+                app:backgroundTint="@color/terminal_toggle_background"
+                app:cornerRadius="12dp" />
         </LinearLayout>
 
         <androidx.drawerlayout.widget.DrawerLayout
@@ -74,7 +86,7 @@
 
             <LinearLayout
                 android:id="@+id/left_drawer"
-                android:layout_width="240dp"
+                android:layout_width="320dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:choiceMode="singleChoice"
@@ -82,12 +94,33 @@
                 android:dividerHeight="0dp"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical"
-                android:background="?attr/termuxActivityDrawerBackground">
+                android:background="@color/terminal_surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="20dp"
+                        android:text="@string/title_terminal_sessions"
+                        android:textSize="20sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/terminal_text" />
+                    <ImageButton
+                        android:id="@+id/toggle_keyboard_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_keyboard"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/description_toggle_keyboard"
+                        android:tooltipText="@string/action_toggle_soft_keyboard"
+                        app:tint="@color/terminal_text_secondary" />
                     <ImageButton
                         android:id="@+id/settings_button"
                         android:layout_width="48dp"
@@ -95,11 +128,7 @@
                         android:src="@drawable/ic_settings"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/action_open_settings"
-                        app:tint="?attr/termuxActivityDrawerImageTint" />
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                        app:tint="@color/terminal_text_secondary" />
                     <ImageButton
                         android:id="@+id/close_sessions_button"
                         android:layout_width="48dp"
@@ -107,7 +136,7 @@
                         android:src="@drawable/ic_close"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/action_close_sessions"
-                        app:tint="?attr/termuxActivityDrawerImageTint" />
+                        app:tint="@color/terminal_text_secondary" />
                 </LinearLayout>
 
                 <ListView
@@ -117,31 +146,36 @@
                     android:layout_gravity="top"
                     android:layout_weight="1"
                     android:choiceMode="singleChoice"
+                    android:paddingHorizontal="12dp"
+                    android:paddingTop="8dp"
+                    android:clipToPadding="false"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="4dp"
+                    android:listSelector="@android:color/transparent"
                     android:longClickable="true" />
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/toggle_keyboard_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="48dp"
-                        android:text="@string/action_toggle_soft_keyboard" />
+                    android:padding="12dp"
+                    android:orientation="vertical">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/new_session_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="48dp"
-                        android:text="@string/action_new_session" />
+                        style="@style/TerminalAction"
+                        android:text="@string/action_new_session"
+                        android:textColor="@color/terminal_on_accent"
+                        app:backgroundTint="@color/terminal_accent"
+                        app:strokeWidth="0dp"
+                        app:icon="@drawable/ic_add"
+                        app:iconTint="@color/terminal_on_accent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/resume_codex_button"
+                        style="@style/TerminalAction"
+                        android:text="@string/action_resume_codex"
+                        app:icon="@drawable/ic_history" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,8 +185,9 @@
             android:id="@+id/terminal_toolbar_view_pager"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="37.5dp"
-            android:background="@color/black"
+            android:layout_height="48dp"
+            android:paddingBottom="8dp"
+            android:background="@color/terminal_surface"
             android:layout_alignParentBottom="true" />
 
     </RelativeLayout>

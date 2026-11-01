@@ -363,6 +363,22 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     }
 
     public void addNewSession(boolean isFailSafe, String sessionName) {
+        addNewSession(isFailSafe, sessionName, null, null);
+    }
+
+    public void resumeCodexSession() {
+        String executable = TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH + "/codex";
+        if (!new File(executable).canExecute()) {
+            new AlertDialog.Builder(mActivity).setTitle(R.string.action_resume_codex)
+                .setMessage(R.string.msg_codex_not_installed)
+                .setPositiveButton(android.R.string.ok, null).show();
+            return;
+        }
+
+        addNewSession(false, "Codex", executable, new String[]{"resume", "--all"});
+    }
+
+    private void addNewSession(boolean isFailSafe, String sessionName, String executable, String[] arguments) {
         TermuxService service = mActivity.getTermuxService();
         if (service == null) return;
 
@@ -379,7 +395,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
                 workingDirectory = currentSession.getCwd();
             }
 
-            TermuxSession newTermuxSession = service.createTermuxSession(null, null, null, workingDirectory, isFailSafe, sessionName);
+            TermuxSession newTermuxSession = service.createTermuxSession(executable, arguments, null, workingDirectory, isFailSafe, sessionName);
             if (newTermuxSession == null) return;
 
             TerminalSession newTerminalSession = newTermuxSession.getTerminalSession();

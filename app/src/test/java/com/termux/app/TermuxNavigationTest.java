@@ -1,6 +1,8 @@
 package com.termux.app;
 
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -8,20 +10,62 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.termux.R;
+import com.termux.app.terminal.TermuxSessionsListViewController;
+import com.termux.shared.shell.command.ExecutionCommand;
+import com.termux.shared.termux.shell.command.runner.terminal.TermuxSession;
+import com.termux.terminal.TerminalSession;
+import org.robolectric.util.ReflectionHelpers;
+import org.robolectric.util.ReflectionHelpers.ClassParameter;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAlertDialog;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {28, 30, 33})
 public class TermuxNavigationTest {
+
+    @Test
+    @Config(sdk = 30)
+    public void recycledSessionRowsClearOldNamesAndExitStatus() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        TerminalSession terminal = new TerminalSession("/system/bin/sh", "/", new String[0], new String[0], 100, null);
+        TermuxSession session = ReflectionHelpers.callConstructor(TermuxSession.class,
+            ClassParameter.from(TerminalSession.class, terminal),
+            ClassParameter.from(ExecutionCommand.class, new ExecutionCommand()),
+            ClassParameter.from(TermuxSession.TermuxSessionClient.class, null),
+            ClassParameter.from(boolean.class, false));
+        terminal.mSessionName = "Codex";
+        TermuxSessionsListViewController adapter = new TermuxSessionsListViewController(activity, Arrays.asList(session));
+        View row = adapter.getView(0, null, new FrameLayout(activity));
+        assertEquals("Codex", ((TextView) row.findViewById(R.id.session_title)).getText().toString());
+        terminal.mSessionName = null;
+        ReflectionHelpers.setField(terminal, "mShellPid", -1);
+        ReflectionHelpers.setField(terminal, "mShellExitStatus", 7);
+        adapter.getView(0, row, new FrameLayout(activity));
+        assertEquals(activity.getString(R.string.session_numbered_title, 1),
+            ((TextView) row.findViewById(R.id.session_title)).getText().toString());
+        assertEquals(activity.getString(R.string.session_exited, 7),
+            ((TextView) row.findViewById(R.id.session_subtitle)).getText().toString());
+    }
+
+    @Test
+    @Config(sdk = 30)
+    public void resumeExplainsHowToRecoverWhenCodexIsNotInstalled() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        activity.findViewById(R.id.resume_codex_button).performClick();
+        assertEquals(activity.getString(R.string.msg_codex_not_installed),
+            shadowOf(ShadowAlertDialog.getLatestAlertDialog()).getMessage());
+    }
 
     @Test
     public void sessionsButtonOpensDrawerWithoutEnablingEdgeSwipe() {

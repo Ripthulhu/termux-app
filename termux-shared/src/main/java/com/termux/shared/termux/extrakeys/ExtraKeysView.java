@@ -2,6 +2,7 @@ package com.termux.shared.termux.extrakeys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,6 +32,7 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.TextViewCompat;
+import androidx.core.content.ContextCompat;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
@@ -416,7 +418,17 @@ public final class ExtraKeysView extends GridLayout {
                     button.setContentDescription("Shift+Tab");
                 button.setTextColor(mButtonTextColor);
                 button.setAllCaps(mButtonTextAllCaps);
-                button.setPadding(0, 0, 0, 0);
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                button.setLetterSpacing(0);
+                button.setBackgroundColor(mButtonBackgroundColor);
+                int inset = Math.round(3 * getResources().getDisplayMetrics().density);
+                button.setCornerRadius(inset * 2);
+                button.setInsetTop(inset);
+                button.setInsetBottom(inset);
+                button.setStrokeWidth(Math.max(1, Math.round(getResources().getDisplayMetrics().density)));
+                button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.terminal_outline)));
+                int horizontalPadding = Math.round(4 * getResources().getDisplayMetrics().density);
+                button.setPadding(horizontalPadding, 0, horizontalPadding, 0);
                 // Fit key names on one line in narrow windows and with larger system text.
                 button.setMaxLines(1);
                 int textSize = Math.round(button.getTextSize());
@@ -485,7 +497,7 @@ public final class ExtraKeysView extends GridLayout {
                 } else {
                     param.height = 0;
                 }
-                param.setMargins(0, 0, 0, 0);
+                param.setMargins(inset, 0, inset, 0);
                 param.columnSpec = GridLayout.spec(col, GridLayout.FILL, 1.f);
                 param.rowSpec = GridLayout.spec(row, GridLayout.FILL, 1.f);
                 button.setLayoutParams(param);

@@ -34,7 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.termux.R;
-import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.button.MaterialButton;
 import com.termux.app.api.file.FileReceiverActivity;
 import com.termux.app.terminal.TermuxActivityRootView;
 import com.termux.app.terminal.TermuxTerminalSessionActivityClient;
@@ -563,7 +563,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         ViewGroup.LayoutParams layoutParams = terminalToolbarViewPager.getLayoutParams();
         layoutParams.height = Math.round(mTerminalToolbarDefaultHeight *
             (mTermuxTerminalExtraKeys.getExtraKeysInfo() == null ? 0 : mTermuxTerminalExtraKeys.getExtraKeysInfo().getMatrix().length) *
-            mProperties.getTerminalToolbarHeightScaleFactor());
+            mProperties.getTerminalToolbarHeightScaleFactor()) + terminalToolbarViewPager.getPaddingBottom();
         terminalToolbarViewPager.setLayoutParams(layoutParams);
     }
 
@@ -608,6 +608,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         });
         findViewById(R.id.sessions_button).setOnClickListener(v -> {
             mTerminalView.stopTextSelectionMode();
+            KeyboardUtils.hideSoftKeyboard(this, mTerminalView);
             getDrawer().openDrawer(GravityCompat.START);
         });
         findViewById(R.id.close_sessions_button).setOnClickListener(v -> getDrawer().closeDrawer(GravityCompat.START));
@@ -621,10 +622,10 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void setPictureInPictureView() {
         if (!supportsPictureInPicture()) return;
-        MaterialCheckBox keepVisible = findViewById(R.id.keep_terminal_visible_checkbox);
+        MaterialButton keepVisible = findViewById(R.id.keep_terminal_visible_button);
         keepVisible.setVisibility(View.VISIBLE);
         keepVisible.setChecked(mPreferences.shouldKeepTerminalVisible());
-        keepVisible.setOnCheckedChangeListener((button, checked) -> {
+        keepVisible.addOnCheckedChangeListener((button, checked) -> {
             mPreferences.setKeepTerminalVisible(checked);
             updatePictureInPictureParams();
         });
@@ -690,6 +691,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
     }
 
     private void setNewSessionButtonView() {
+        findViewById(R.id.resume_codex_button).setOnClickListener(v -> mTermuxTerminalSessionActivityClient.resumeCodexSession());
         View newSessionButton = findViewById(R.id.new_session_button);
         newSessionButton.setOnClickListener(v -> mTermuxTerminalSessionActivityClient.addNewSession(false, null));
         newSessionButton.setOnLongClickListener(v -> {
