@@ -418,7 +418,7 @@ public final class ExtraKeysView extends GridLayout {
                     button.setContentDescription("Shift+Tab");
                 button.setTextColor(mButtonTextColor);
                 button.setAllCaps(mButtonTextAllCaps);
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 button.setLetterSpacing(0);
                 button.setBackgroundColor(mButtonBackgroundColor);
                 int inset = Math.round(3 * getResources().getDisplayMetrics().density);
@@ -497,7 +497,8 @@ public final class ExtraKeysView extends GridLayout {
                 } else {
                     param.height = 0;
                 }
-                param.setMargins(inset, 0, inset, 0);
+                int margin = Math.round(2 * getResources().getDisplayMetrics().density);
+                param.setMargins(margin, 0, margin, 0);
                 param.columnSpec = GridLayout.spec(col, GridLayout.FILL, 1.f);
                 param.rowSpec = GridLayout.spec(row, GridLayout.FILL, 1.f);
                 button.setLayoutParams(param);
