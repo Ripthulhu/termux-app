@@ -16,10 +16,69 @@
         android:layout_marginVertical="0dp"
         android:orientation="vertical">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/terminal_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorSurface"
+            android:minHeight="56dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetEnd="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/sessions_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/action_open_sessions"
+                android:tooltipText="@string/title_terminal_sessions"
+                android:src="@drawable/ic_menu"
+                app:tint="?attr/colorOnSurface" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="8dp"
+                android:text="@string/application_name"
+                android:textColor="?attr/colorOnSurface"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceTitleLarge" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/keep_terminal_visible_button"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="0dp"
+                android:padding="0dp"
+                android:visibility="gone"
+                android:tooltipText="@string/action_keep_terminal_visible"
+                android:contentDescription="@string/description_keep_terminal_visible"
+                android:checkable="true"
+                app:icon="@drawable/ic_picture_in_picture"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/terminal_toggle_icon"
+                app:backgroundTint="@color/terminal_toggle_background"
+                app:cornerRadius="24dp" />
+        </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/terminal_navigation_bar"
             android:layout_above="@+id/terminal_toolbar_view_pager"
             android:layout_height="match_parent">
 
@@ -35,28 +94,65 @@
 
             <LinearLayout
                 android:id="@+id/left_drawer"
-                android:layout_width="240dp"
+                android:layout_width="320dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:choiceMode="singleChoice"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="0dp"
-                android:descendantFocusability="blocksDescendants"
+                android:descendantFocusability="afterDescendants"
                 android:orientation="vertical"
-                android:background="?attr/termuxActivityDrawerBackground">
+                android:background="@drawable/terminal_drawer_background">
 
                 <LinearLayout
+                    android:id="@+id/session_panel_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="64dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/session_panel_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="20dp"
+                        android:text="@string/title_terminal_sessions"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="?attr/colorOnSurface" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/toggle_keyboard_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_keyboard"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/description_toggle_keyboard"
+                        android:tooltipText="@string/action_toggle_soft_keyboard"
+                        app:tint="?attr/colorOnSurfaceVariant" />
                     <ImageButton
                         android:id="@+id/settings_button"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/ic_settings"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/action_open_settings"
-                        app:tint="?attr/termuxActivityDrawerImageTint" />
+                        app:tint="?attr/colorOnSurfaceVariant" />
+                    <ImageButton
+                        android:id="@+id/close_sessions_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_close"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/action_close_sessions"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ListView
@@ -66,29 +162,32 @@
                     android:layout_gravity="top"
                     android:layout_weight="1"
                     android:choiceMode="singleChoice"
+                    android:paddingHorizontal="12dp"
+                    android:paddingTop="8dp"
+                    android:clipToPadding="false"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="4dp"
+                    android:listSelector="@android:color/transparent"
                     android:longClickable="true" />
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/toggle_keyboard_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/action_toggle_soft_keyboard" />
+                    android:padding="12dp"
+                    android:orientation="vertical">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/new_session_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/action_new_session" />
+                        style="@style/TerminalAction.Primary"
+                        android:text="@string/action_new_session"
+                        app:icon="@drawable/ic_add" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/resume_codex_button"
+                        style="@style/TerminalAction"
+                        android:text="@string/action_resume_codex"
+                        app:icon="@drawable/ic_history" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -98,8 +197,9 @@
             android:id="@+id/terminal_toolbar_view_pager"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="37.5dp"
-            android:background="@color/black"
+            android:layout_height="48dp"
+            android:paddingBottom="8dp"
+            android:background="?attr/colorSurface"
             android:layout_alignParentBottom="true" />
 
     </RelativeLayout>

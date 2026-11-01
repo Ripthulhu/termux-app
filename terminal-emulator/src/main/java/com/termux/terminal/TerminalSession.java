@@ -3,6 +3,7 @@ package com.termux.terminal;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -46,7 +47,9 @@ public final class TerminalSession extends TerminalOutput {
      * A queue written to from the main thread due to user interaction, and read by another thread which forwards by
      * writing to the {@link #mTerminalFileDescriptor}.
      */
-    final ByteQueue mTerminalToProcessIOQueue = new ByteQueue(4096);
+    final ByteQueue mTerminalToProcessIOQueue = new ByteQueue(1024 * 1024);
+    private boolean mInputRejected;
+    private long mLastInputRejectedAt;
     /** Buffer to write translate code points into utf8 before writing to mTerminalToProcessIOQueue */
     private final byte[] mUtf8InputBuffer = new byte[5];
 
@@ -158,7 +161,7 @@ public final class TerminalSession extends TerminalOutput {
                         termOut.write(buffer, 0, bytesToWrite);
                     }
                 } catch (IOException e) {
-                    // Ignore.
+                    mTerminalToProcessIOQueue.close();
                 }
             }
         }.start();
@@ -176,7 +179,14 @@ public final class TerminalSession extends TerminalOutput {
     /** Write data to the shell process. */
     @Override
     public void write(byte[] data, int offset, int count) {
-        if (mShellPid > 0) mTerminalToProcessIOQueue.write(data, offset, count);
+        if (mShellPid <= 0 || count == 0) return;
+        if (mTerminalToProcessIOQueue.write(data, offset, count, false)) {
+            mInputRejected = false;
+        } else if (!mInputRejected || SystemClock.uptimeMillis() - mLastInputRejectedAt >= 5000) {
+            mInputRejected = true;
+            mLastInputRejectedAt = SystemClock.uptimeMillis();
+            mClient.onInputRejected(this);
+        }
     }
 
     /** Write the Unicode code point to the terminal encoded in UTF-8. */

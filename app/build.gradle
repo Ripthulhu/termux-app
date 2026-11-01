@@ -43,8 +43,9 @@ android {
     defaultConfig {
         minSdkVersion project.properties.minSdkVersion.toInteger()
         targetSdkVersion project.properties.targetSdkVersion.toInteger()
-        versionCode 118
-        versionName "0.118.0"
+        versionCode 1005
+        versionName "0.118.0-material3.1"
+        testInstrumentationRunner "com.termux.app.api.file.SecurityRegressionChecks"
 
         if (appVersionName) versionName = appVersionName
         validateVersionName(versionName)

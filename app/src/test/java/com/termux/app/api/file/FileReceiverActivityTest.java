@@ -4,14 +4,48 @@ import com.termux.app.api.file.FileReceiverActivity;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 30)
 public class FileReceiverActivityTest {
+    @Rule public TemporaryFolder temporary = new TemporaryFolder();
+
+    @Test public void refusesPathNamesBeforeCreatingAnything() throws Exception {
+        File directory = new File(temporary.getRoot(), "downloads");
+        for (String name : new String[]{null, "", ".", "..", "../outside", "/absolute", "sub/file", "sub\\file", "bad\0name"}) {
+            try {
+                FileReceiverActivity.saveStreamWithName(new ByteArrayInputStream(new byte[]{1}), name, directory);
+                Assert.fail("Accepted invalid name: " + name);
+            } catch (IOException expected) {
+                Assert.assertFalse(directory.exists());
+            }
+        }
+    }
+
+    @Test public void refusesToTruncateAnExistingDownload() throws Exception {
+        File directory = temporary.newFolder("downloads");
+        File target = new File(directory, "notes.txt");
+        try (FileOutputStream output = new FileOutputStream(target)) { output.write(new byte[]{1, 2, 3}); }
+        try {
+            FileReceiverActivity.saveStreamWithName(new ByteArrayInputStream(new byte[]{9}), "notes.txt", directory);
+            Assert.fail("Overwrote an existing download");
+        } catch (IOException expected) {
+            Assert.assertEquals(3, target.length());
+        }
+    }
 
     @Test
     public void testIsSharedTextAnUrl() {

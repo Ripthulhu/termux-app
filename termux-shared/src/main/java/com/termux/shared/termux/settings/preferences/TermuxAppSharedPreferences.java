@@ -82,6 +82,15 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
         return !currentValue;
     }
 
+    public boolean shouldKeepTerminalVisible() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_TERMINAL_VISIBLE,
+            TERMUX_APP.DEFAULT_VALUE_KEEP_TERMINAL_VISIBLE);
+    }
+
+    public void setKeepTerminalVisible(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_TERMINAL_VISIBLE, value, false);
+    }
+
 
 
     public boolean isTerminalMarginAdjustmentEnabled() {

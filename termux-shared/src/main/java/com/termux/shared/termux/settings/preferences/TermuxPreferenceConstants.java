@@ -1,9 +1,12 @@
 package com.termux.shared.termux.settings.preferences;
 
 /*
- * Version: v0.16.0
+ * Version: v0.17.0
  *
  * Changelog
+ *
+ * - 0.17.0 (2026-11-01)
+ *      - Added `TERMUX_APP.KEY_KEEP_TERMINAL_VISIBLE`.
  *
  * - 0.1.0 (2021-03-12)
  *      - Initial Release.
@@ -101,6 +104,9 @@ public final class TermuxPreferenceConstants {
          */
         public static final String KEY_SHOW_TERMINAL_TOOLBAR = "show_extra_keys";
         public static final boolean DEFAULT_VALUE_SHOW_TERMINAL_TOOLBAR = true;
+
+        public static final String KEY_KEEP_TERMINAL_VISIBLE = "keep_terminal_visible";
+        public static final boolean DEFAULT_VALUE_KEEP_TERMINAL_VISIBLE = false;
 
 
         /**
