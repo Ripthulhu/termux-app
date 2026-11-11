@@ -1,7 +1,8 @@
 package com.termux.app.terminal;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -51,8 +53,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-
 public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
 
     final TermuxActivity mActivity;
@@ -66,6 +66,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
 
     private boolean mShowSoftKeyboardIgnoreOnce;
     private boolean mShowSoftKeyboardWithDelayOnce;
+    private boolean mSoftKeyboardTextInputEnabled;
 
     private boolean mTerminalCursorBlinkerStateAlreadySet;
 
@@ -87,6 +88,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
      */
     public void onCreate() {
         onReloadProperties();
+        mSoftKeyboardTextInputEnabled = shouldUseTextInput();
 
         mActivity.getTerminalView().setTextSize(mActivity.getPreferences().getFontSize());
         mActivity.getTerminalView().setKeepScreenOn(mActivity.getPreferences().shouldKeepScreenOn());
@@ -110,6 +112,13 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
      * Should be called when mActivity.onResume() is called
      */
     public void onResume() {
+        boolean textInputEnabled = shouldUseTextInput();
+        if (mSoftKeyboardTextInputEnabled != textInputEnabled) {
+            mSoftKeyboardTextInputEnabled = textInputEnabled;
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .restartInput(mActivity.getTerminalView());
+        }
+
         // Show the soft keyboard if required
         setSoftKeyboardState(true, mActivity.isActivityRecreated());
 
@@ -217,6 +226,11 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
     }
 
     @Override
+    public boolean shouldUseTextInput() {
+        return mActivity.getPreferences().isSoftKeyboardTextInputEnabled();
+    }
+
+    @Override
     public boolean shouldUseCtrlSpaceWorkaround() {
         return mActivity.getProperties().isUsingCtrlSpaceWorkaround();
     }
@@ -230,8 +244,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
 
     @Override
     public void copyModeChanged(boolean copyMode) {
-        // Disable drawer while copying.
-        mActivity.getDrawer().setDrawerLockMode(copyMode ? DrawerLayout.LOCK_MODE_LOCKED_CLOSED : DrawerLayout.LOCK_MODE_UNLOCKED);
+        mActivity.findViewById(R.id.sessions_button).setEnabled(!copyMode);
     }
 
 
@@ -254,9 +267,9 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP || unicodeChar == 'p' /* previous */) {
                 mTermuxTerminalSessionActivityClient.switchToSession(false);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                mActivity.getDrawer().openDrawer(Gravity.LEFT);
+                mActivity.openSessionDrawer();
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                mActivity.getDrawer().closeDrawers();
+                mActivity.closeSessionDrawer();
             } else if (unicodeChar == 'k'/* keyboard */) {
                 onToggleSoftKeyboardRequest();
             } else if (unicodeChar == 'm'/* menu */) {
@@ -699,7 +712,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
 
         LinkedHashSet<CharSequence> urlSet = TermuxUrlUtils.extractUrls(text);
         if (urlSet.isEmpty()) {
-            new AlertDialog.Builder(mActivity).setMessage(R.string.title_select_url_none_found).show();
+            new MaterialAlertDialogBuilder(mActivity).setMessage(R.string.title_select_url_none_found).show();
             return;
         }
 
@@ -707,7 +720,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
         Collections.reverse(Arrays.asList(urls)); // Latest first.
 
         // Click to copy url to clipboard:
-        final AlertDialog dialog = new AlertDialog.Builder(mActivity).setItems(urls, (di, which) -> {
+        final AlertDialog dialog = new MaterialAlertDialogBuilder(mActivity).setItems(urls, (di, which) -> {
             String url = (String) urls[which];
             ShareUtils.copyTextToClipboard(mActivity, url, mActivity.getString(R.string.msg_select_url_copied_to_clipboard));
         }).setTitle(R.string.title_select_url_dialog).create();

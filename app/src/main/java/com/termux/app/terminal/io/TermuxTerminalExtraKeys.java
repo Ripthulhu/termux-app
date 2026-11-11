@@ -90,9 +90,9 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
         } else if ("DRAWER".equals(key)) {
             DrawerLayout drawerLayout = mTermuxTerminalViewClient.getActivity().getDrawer();
             if (drawerLayout.isDrawerOpen(Gravity.LEFT))
-                drawerLayout.closeDrawer(Gravity.LEFT);
+                mActivity.closeSessionDrawer();
             else
-                drawerLayout.openDrawer(Gravity.LEFT);
+                mActivity.openSessionDrawer();
         } else if ("PASTE".equals(key)) {
             if(mTermuxTerminalSessionActivityClient != null)
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);

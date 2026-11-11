@@ -2,12 +2,15 @@ package com.termux.app.terminal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.graphics.Color;
+import android.os.Build;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.text.TextUtils;
@@ -29,8 +32,8 @@ import com.termux.shared.termux.terminal.io.BellHandler;
 import com.termux.shared.logger.Logger;
 import com.termux.terminal.TerminalColors;
 import com.termux.terminal.TerminalSession;
-import com.termux.terminal.TerminalSessionClient;
 import com.termux.terminal.TextStyle;
+import com.termux.terminal.TerminalSessionClient;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -181,6 +184,15 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     }
 
     @Override
+    public void onInputRejected(@NonNull TerminalSession session) {
+        super.onInputRejected(session);
+        if (mActivity.isVisible() && session == mActivity.getCurrentSession())
+            com.google.android.material.snackbar.Snackbar.make(mActivity, mActivity.getTerminalView(),
+                mActivity.getString(R.string.msg_terminal_input_busy), com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                .setAnchorView(mActivity.getTerminalToolbarViewPager()).setTextMaxLines(4).show();
+    }
+
+    @Override
     public void onCopyTextToClipboard(@NonNull TerminalSession session, String text) {
         if (!mActivity.isVisible()) return;
 
@@ -192,8 +204,10 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         if (!mActivity.isVisible()) return;
 
         String text = ShareUtils.getTextStringFromClipboardIfSet(mActivity, true);
-        if (text != null)
+        if (text != null) {
+            mActivity.getTerminalView().resetImeText();
             mActivity.getTerminalView().mEmulator.paste(text);
+        }
     }
 
     @Override
@@ -302,6 +316,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         // be stale, like current session not selected or scrolled to.
         checkAndScrollToSession(session);
         updateBackgroundColor();
+        mActivity.updatePictureInPictureParams();
     }
 
     void notifyOfSessionChange() {
@@ -362,11 +377,27 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     }
 
     public void addNewSession(boolean isFailSafe, String sessionName) {
+        addNewSession(isFailSafe, sessionName, null, null);
+    }
+
+    public void resumeCodexSession() {
+        String executable = TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH + "/codex";
+        if (!new File(executable).canExecute()) {
+            new MaterialAlertDialogBuilder(mActivity).setTitle(R.string.action_resume_codex)
+                .setMessage(R.string.msg_codex_not_installed)
+                .setPositiveButton(android.R.string.ok, null).show();
+            return;
+        }
+
+        addNewSession(false, "Codex", executable, new String[]{"resume", "--all"});
+    }
+
+    private void addNewSession(boolean isFailSafe, String sessionName, String executable, String[] arguments) {
         TermuxService service = mActivity.getTermuxService();
         if (service == null) return;
 
         if (service.getTermuxSessionsSize() >= MAX_SESSIONS) {
-            new AlertDialog.Builder(mActivity).setTitle(R.string.title_max_terminals_reached).setMessage(R.string.msg_max_terminals_reached)
+            new MaterialAlertDialogBuilder(mActivity).setTitle(R.string.title_max_terminals_reached).setMessage(R.string.msg_max_terminals_reached)
                 .setPositiveButton(android.R.string.ok, null).show();
         } else {
             TerminalSession currentSession = mActivity.getCurrentSession();
@@ -378,13 +409,13 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
                 workingDirectory = currentSession.getCwd();
             }
 
-            TermuxSession newTermuxSession = service.createTermuxSession(null, null, null, workingDirectory, isFailSafe, sessionName);
+            TermuxSession newTermuxSession = service.createTermuxSession(executable, arguments, null, workingDirectory, isFailSafe, sessionName);
             if (newTermuxSession == null) return;
 
             TerminalSession newTerminalSession = newTermuxSession.getTerminalSession();
             setCurrentSession(newTerminalSession);
 
-            mActivity.getDrawer().closeDrawers();
+            mActivity.closeSessionDrawer();
         }
     }
 
@@ -521,7 +552,12 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         if (!mActivity.isVisible()) return;
         TerminalSession session = mActivity.getCurrentSession();
         if (session != null && session.getEmulator() != null) {
-            mActivity.getWindow().getDecorView().setBackgroundColor(session.getEmulator().mColors.mCurrentColors[TextStyle.COLOR_INDEX_BACKGROUND]);
+            // The renderer leaves default-background cells transparent.
+            mActivity.getTerminalView().setBackgroundColor(session.getEmulator().mColors.mCurrentColors[TextStyle.COLOR_INDEX_BACKGROUND]);
+            mActivity.getWindow().getDecorView().setBackgroundColor(
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActivity.isInPictureInPictureMode() ? Color.BLACK :
+                com.google.android.material.color.MaterialColors.getColor(mActivity.getTerminalView(),
+                    com.google.android.material.R.attr.colorSurface));
         }
     }
 

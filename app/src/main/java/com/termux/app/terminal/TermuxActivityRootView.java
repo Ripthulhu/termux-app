@@ -3,6 +3,7 @@ package com.termux.app.terminal;
 import android.content.Context;
 import android.graphics.Rect;
 import android.inputmethodservice.InputMethodService;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.termux.app.TermuxActivity;
@@ -21,6 +23,9 @@ import com.termux.shared.view.ViewUtils;
 
 
 /**
+ * On Android 11 and later, {@link WindowInsetsListener} keeps content clear of system bars,
+ * display cutouts and the keyboard. Older versions use the layout workaround described below.
+ *
  * The {@link TermuxActivity} relies on {@link android.view.WindowManager.LayoutParams#SOFT_INPUT_ADJUST_RESIZE)}
  * set by {@link TermuxTerminalViewClient#setSoftKeyboardState(boolean, boolean)} to automatically
  * resize the view and push the terminal up when soft keyboard is opened. However, this does not
@@ -290,7 +295,15 @@ public class TermuxActivityRootView extends LinearLayout implements ViewTreeObse
     public static class WindowInsetsListener implements View.OnApplyWindowInsetsListener {
         @Override
         public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-            mStatusBarHeight =  WindowInsetsCompat.toWindowInsetsCompat(insets).getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            WindowInsetsCompat windowInsets = WindowInsetsCompat.toWindowInsetsCompat(insets);
+            mStatusBarHeight = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Insets overlap: take their union so the keyboard and navigation bar are not counted twice.
+                Insets safeArea = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() |
+                    WindowInsetsCompat.Type.displayCutout() | WindowInsetsCompat.Type.ime());
+                v.setPadding(safeArea.left, safeArea.top, safeArea.right, safeArea.bottom);
+                return insets;
+            }
             // Let view window handle insets however it wants
             return v.onApplyWindowInsets(insets);
         }

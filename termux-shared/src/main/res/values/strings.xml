@@ -14,6 +14,8 @@
 
 <resources>
 
+    <string name="extra_keys_toggle_keyboard">Show or hide Android keyboard</string>
+
     <string name="msg_directory_absolute_path">%1$s Directory Absolute Path: \"%2$s\"</string>
 
 

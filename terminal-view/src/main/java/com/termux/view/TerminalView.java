@@ -32,6 +32,8 @@ import android.view.autofill.AutofillValue;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.TextAttribute;
 import android.widget.Scroller;
 
 import androidx.annotation.Nullable;
@@ -56,6 +58,7 @@ public final class TerminalView extends View {
     public TerminalRenderer mRenderer;
 
     public TerminalViewClient mClient;
+    private final StringBuilder mImeText = new StringBuilder();
 
     private TextSelectionCursorController mTextSelectionCursorController;
 
@@ -290,6 +293,8 @@ public final class TerminalView extends View {
     public boolean attachSession(TerminalSession session) {
         if (session == mTermSession) return false;
 
+        resetImeText();
+
         mTermSession = session;
         mEmulator = null;
         mCombiningAccent = 0;
@@ -307,12 +312,17 @@ public final class TerminalView extends View {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        mImeText.setLength(0);
         // Ensure that inputType is only set if TerminalView is selected view with the keyboard and
         // an alternate view is not selected, like an EditText. This is necessary if an activity is
         // initially started with the alternate view or if activity is returned to from another app
         // and the alternate view was the one selected the last time.
         if (mClient.isTerminalViewSelected()) {
-            if (mClient.shouldEnforceCharBasedInput()) {
+            if (mClient.shouldUseTextInput()) {
+                outAttrs.inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT |
+                    InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+                outAttrs.initialSelStart = outAttrs.initialSelEnd = 0;
+            } else if (mClient.shouldEnforceCharBasedInput()) {
                 // Some keyboards seems do not reset the internal state on TYPE_NULL.
                 // Affects mostly Samsung stock keyboards.
                 // https://github.com/termux/termux-app/issues/686
@@ -341,6 +351,30 @@ public final class TerminalView extends View {
         outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_FULLSCREEN;
 
         return new BaseInputConnection(this, true) {
+
+            @Override
+            @RequiresApi(34)
+            public boolean replaceText(int start, int end, CharSequence text, int newCursorPosition, TextAttribute textAttribute) {
+                if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) mClient.logInfo(LOG_TAG,
+                    "IME: replaceText(" + start + ", " + end + ", " + text + ", " + newCursorPosition + ")");
+                // shortcut: corrections replace only the newly typed suffix; arbitrary terminal edits need the text-input page.
+                if (!mClient.shouldUseTextInput() || start < 0 || end < start ||
+                    end != mImeText.length() || newCursorPosition != 1 || mEmulator == null) return false;
+                if (start > 0 && start < end && Character.isHighSurrogate(mImeText.charAt(start - 1)) &&
+                    Character.isLowSurrogate(mImeText.charAt(start))) return false;
+                int deletes = mImeText.codePointCount(start, end);
+                for (int i = 0; i < deletes; i++) handleKeyCode(KeyEvent.KEYCODE_DEL, 0);
+                mImeText.setLength(start);
+                getEditable().clear();
+                sendTextToTerminal(text);
+                return true;
+            }
+
+            @Override
+            public CharSequence getTextBeforeCursor(int length, int flags) {
+                if (!mClient.shouldUseTextInput()) return super.getTextBeforeCursor(length, flags);
+                return mImeText.substring(Math.max(0, mImeText.length() - Math.max(0, length)));
+            }
 
             @Override
             public boolean finishComposingText() {
@@ -373,8 +407,19 @@ public final class TerminalView extends View {
                     mClient.logInfo(LOG_TAG, "IME: deleteSurroundingText(" + leftLength + ", " + rightLength + ")");
                 }
                 // The stock Samsung keyboard with 'Auto check spelling' enabled sends leftLength > 1.
-                KeyEvent deleteKey = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL);
-                for (int i = 0; i < leftLength; i++) sendKeyEvent(deleteKey);
+                if (mClient.shouldUseTextInput() && mEmulator != null) {
+                    int start = Math.max(0, mImeText.length() - Math.max(0, leftLength));
+                    if (start > 0 && start < mImeText.length() && Character.isHighSurrogate(mImeText.charAt(start - 1)) &&
+                        Character.isLowSurrogate(mImeText.charAt(start))) start--;
+                    int deletes = mImeText.codePointCount(start, mImeText.length()) +
+                        Math.max(0, leftLength - mImeText.length());
+                    for (int i = 0; i < deletes; i++) handleKeyCode(KeyEvent.KEYCODE_DEL, 0);
+                    mImeText.setLength(start);
+                    updateImeSelection();
+                } else {
+                    KeyEvent deleteKey = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL);
+                    for (int i = 0; i < leftLength; i++) sendKeyEvent(deleteKey);
+                }
                 return super.deleteSurroundingText(leftLength, rightLength);
             }
 
@@ -432,9 +477,21 @@ public final class TerminalView extends View {
 
                     inputCodePoint(KEY_EVENT_SOURCE_SOFT_KEYBOARD, codePoint, ctrlHeld, false);
                 }
+                if (mClient.shouldUseTextInput()) updateImeSelection();
             }
 
         };
+    }
+
+    /** Discard keyboard correction context after an external terminal edit. */
+    public void resetImeText() {
+        mImeText.setLength(0);
+        if (mClient != null && mClient.shouldUseTextInput()) updateImeSelection();
+    }
+
+    private void updateImeSelection() {
+        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+            .updateSelection(this, mImeText.length(), mImeText.length(), -1, -1);
     }
 
     @Override
@@ -623,7 +680,10 @@ public final class TerminalView extends View {
                     ClipData.Item clipItem = clipData.getItemAt(0);
                     if (clipItem != null) {
                         CharSequence text = clipItem.coerceToText(getContext());
-                        if (!TextUtils.isEmpty(text)) mEmulator.paste(text.toString());
+                        if (!TextUtils.isEmpty(text)) {
+                            resetImeText();
+                            mEmulator.paste(text.toString());
+                        }
                     }
                 }
             } else if (mEmulator.isMouseTrackingActive()) { // BUTTON_PRIMARY.
@@ -768,6 +828,7 @@ public final class TerminalView extends View {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        resetImeText();
         if (TERMINAL_VIEW_KEY_LOGGING_ENABLED)
             mClient.logInfo(LOG_TAG, "onKeyDown(keyCode=" + keyCode + ", isSystem()=" + event.isSystem() + ", event=" + event + ")");
         if (mEmulator == null) return true;
@@ -845,6 +906,7 @@ public final class TerminalView extends View {
     }
 
     public void inputCodePoint(int eventSource, int codePoint, boolean controlDownFromEvent, boolean leftAltDownFromEvent) {
+        if (eventSource != KEY_EVENT_SOURCE_SOFT_KEYBOARD) resetImeText();
         if (TERMINAL_VIEW_KEY_LOGGING_ENABLED) {
             mClient.logInfo(LOG_TAG, "inputCodePoint(eventSource=" + eventSource + ", codePoint=" + codePoint + ", controlDownFromEvent=" + controlDownFromEvent + ", leftAltDownFromEvent="
                 + leftAltDownFromEvent + ")");
@@ -859,7 +921,15 @@ public final class TerminalView extends View {
         final boolean controlDown = controlDownFromEvent || mClient.readControlKey();
         final boolean altDown = leftAltDownFromEvent || mClient.readAltKey();
 
-        if (mClient.onCodePoint(codePoint, controlDown, mTermSession)) return;
+        if (mClient.onCodePoint(codePoint, controlDown, mTermSession)) {
+            resetImeText();
+            return;
+        }
+
+        if (eventSource == KEY_EVENT_SOURCE_SOFT_KEYBOARD && mClient.shouldUseTextInput()) {
+            if (controlDown || altDown || codePoint < 32 || codePoint == 127) mImeText.setLength(0);
+            else mImeText.appendCodePoint(codePoint);
+        }
 
         if (controlDown) {
             if (codePoint >= 'a' && codePoint <= 'z') {

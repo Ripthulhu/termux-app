@@ -1,0 +1,906 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T11:04:50.101276+00:00",
+  "title": "Design System: Termux for Android and Codex",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Primary",
+        "tonalRamp": [
+          "oklch(15% 0.10955 158.35)",
+          "oklch(26% 0.10955 158.35)",
+          "oklch(38% 0.10955 158.35)",
+          "oklch(49% 0.10955 158.35)",
+          "oklch(61% 0.10955 158.35)",
+          "oklch(72% 0.10955 158.35)",
+          "oklch(84% 0.10955 158.35)",
+          "oklch(95% 0.10955 158.35)"
+        ]
+      },
+      "on-primary": {
+        "role": "primary",
+        "displayName": "On Primary",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(26% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(49% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(72% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "primary-container": {
+        "role": "primary",
+        "displayName": "Primary Container",
+        "tonalRamp": [
+          "oklch(15% 0.12359 154.66)",
+          "oklch(26% 0.12359 154.66)",
+          "oklch(38% 0.12359 154.66)",
+          "oklch(49% 0.12359 154.66)",
+          "oklch(61% 0.12359 154.66)",
+          "oklch(72% 0.12359 154.66)",
+          "oklch(84% 0.12359 154.66)",
+          "oklch(95% 0.12359 154.66)"
+        ]
+      },
+      "on-primary-container": {
+        "role": "primary",
+        "displayName": "On Primary Container",
+        "tonalRamp": [
+          "oklch(15% 0.05308 155.74)",
+          "oklch(26% 0.05308 155.74)",
+          "oklch(38% 0.05308 155.74)",
+          "oklch(49% 0.05308 155.74)",
+          "oklch(61% 0.05308 155.74)",
+          "oklch(72% 0.05308 155.74)",
+          "oklch(84% 0.05308 155.74)",
+          "oklch(95% 0.05308 155.74)"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.03474 156.91)",
+          "oklch(26% 0.03474 156.91)",
+          "oklch(38% 0.03474 156.91)",
+          "oklch(49% 0.03474 156.91)",
+          "oklch(61% 0.03474 156.91)",
+          "oklch(72% 0.03474 156.91)",
+          "oklch(84% 0.03474 156.91)",
+          "oklch(95% 0.03474 156.91)"
+        ]
+      },
+      "on-secondary": {
+        "role": "secondary",
+        "displayName": "On Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(26% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(49% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(72% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "secondary-container": {
+        "role": "secondary",
+        "displayName": "Secondary Container",
+        "tonalRamp": [
+          "oklch(15% 0.03511 153.20)",
+          "oklch(26% 0.03511 153.20)",
+          "oklch(38% 0.03511 153.20)",
+          "oklch(49% 0.03511 153.20)",
+          "oklch(61% 0.03511 153.20)",
+          "oklch(72% 0.03511 153.20)",
+          "oklch(84% 0.03511 153.20)",
+          "oklch(95% 0.03511 153.20)"
+        ]
+      },
+      "on-secondary-container": {
+        "role": "secondary",
+        "displayName": "On Secondary Container",
+        "tonalRamp": [
+          "oklch(15% 0.03622 156.53)",
+          "oklch(26% 0.03622 156.53)",
+          "oklch(38% 0.03622 156.53)",
+          "oklch(49% 0.03622 156.53)",
+          "oklch(61% 0.03622 156.53)",
+          "oklch(72% 0.03622 156.53)",
+          "oklch(84% 0.03622 156.53)",
+          "oklch(95% 0.03622 156.53)"
+        ]
+      },
+      "tertiary": {
+        "role": "tertiary",
+        "displayName": "Tertiary",
+        "tonalRamp": [
+          "oklch(15% 0.05031 222.35)",
+          "oklch(26% 0.05031 222.35)",
+          "oklch(38% 0.05031 222.35)",
+          "oklch(49% 0.05031 222.35)",
+          "oklch(61% 0.05031 222.35)",
+          "oklch(72% 0.05031 222.35)",
+          "oklch(84% 0.05031 222.35)",
+          "oklch(95% 0.05031 222.35)"
+        ]
+      },
+      "on-tertiary": {
+        "role": "tertiary",
+        "displayName": "On Tertiary",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(26% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(49% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(72% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "tertiary-container": {
+        "role": "tertiary",
+        "displayName": "Tertiary Container",
+        "tonalRamp": [
+          "oklch(15% 0.04721 222.06)",
+          "oklch(26% 0.04721 222.06)",
+          "oklch(38% 0.04721 222.06)",
+          "oklch(49% 0.04721 222.06)",
+          "oklch(61% 0.04721 222.06)",
+          "oklch(72% 0.04721 222.06)",
+          "oklch(84% 0.04721 222.06)",
+          "oklch(95% 0.04721 222.06)"
+        ]
+      },
+      "on-tertiary-container": {
+        "role": "tertiary",
+        "displayName": "On Tertiary Container",
+        "tonalRamp": [
+          "oklch(15% 0.04050 220.60)",
+          "oklch(26% 0.04050 220.60)",
+          "oklch(38% 0.04050 220.60)",
+          "oklch(49% 0.04050 220.60)",
+          "oklch(61% 0.04050 220.60)",
+          "oklch(72% 0.04050 220.60)",
+          "oklch(84% 0.04050 220.60)",
+          "oklch(95% 0.04050 220.60)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(15% 0.01060 136.56)",
+          "oklch(26% 0.01060 136.56)",
+          "oklch(38% 0.01060 136.56)",
+          "oklch(49% 0.01060 136.56)",
+          "oklch(61% 0.01060 136.56)",
+          "oklch(72% 0.01060 136.56)",
+          "oklch(84% 0.01060 136.56)",
+          "oklch(95% 0.01060 136.56)"
+        ]
+      },
+      "on-surface": {
+        "role": "neutral",
+        "displayName": "On Surface",
+        "tonalRamp": [
+          "oklch(15% 0.01213 145.16)",
+          "oklch(26% 0.01213 145.16)",
+          "oklch(38% 0.01213 145.16)",
+          "oklch(49% 0.01213 145.16)",
+          "oklch(61% 0.01213 145.16)",
+          "oklch(72% 0.01213 145.16)",
+          "oklch(84% 0.01213 145.16)",
+          "oklch(95% 0.01213 145.16)"
+        ]
+      },
+      "surface-variant": {
+        "role": "neutral",
+        "displayName": "Surface Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01760 140.02)",
+          "oklch(26% 0.01760 140.02)",
+          "oklch(38% 0.01760 140.02)",
+          "oklch(49% 0.01760 140.02)",
+          "oklch(61% 0.01760 140.02)",
+          "oklch(72% 0.01760 140.02)",
+          "oklch(84% 0.01760 140.02)",
+          "oklch(95% 0.01760 140.02)"
+        ]
+      },
+      "on-surface-variant": {
+        "role": "neutral",
+        "displayName": "On Surface Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01686 145.25)",
+          "oklch(26% 0.01686 145.25)",
+          "oklch(38% 0.01686 145.25)",
+          "oklch(49% 0.01686 145.25)",
+          "oklch(61% 0.01686 145.25)",
+          "oklch(72% 0.01686 145.25)",
+          "oklch(84% 0.01686 145.25)",
+          "oklch(95% 0.01686 145.25)"
+        ]
+      },
+      "surface-container-low": {
+        "role": "neutral",
+        "displayName": "Surface Container Low",
+        "tonalRamp": [
+          "oklch(15% 0.01065 136.56)",
+          "oklch(26% 0.01065 136.56)",
+          "oklch(38% 0.01065 136.56)",
+          "oklch(49% 0.01065 136.56)",
+          "oklch(61% 0.01065 136.56)",
+          "oklch(72% 0.01065 136.56)",
+          "oklch(84% 0.01065 136.56)",
+          "oklch(95% 0.01065 136.56)"
+        ]
+      },
+      "surface-container": {
+        "role": "neutral",
+        "displayName": "Surface Container",
+        "tonalRamp": [
+          "oklch(15% 0.01237 137.78)",
+          "oklch(26% 0.01237 137.78)",
+          "oklch(38% 0.01237 137.78)",
+          "oklch(49% 0.01237 137.78)",
+          "oklch(61% 0.01237 137.78)",
+          "oklch(72% 0.01237 137.78)",
+          "oklch(84% 0.01237 137.78)",
+          "oklch(95% 0.01237 137.78)"
+        ]
+      },
+      "surface-container-high": {
+        "role": "neutral",
+        "displayName": "Surface Container High",
+        "tonalRamp": [
+          "oklch(15% 0.01243 137.79)",
+          "oklch(26% 0.01243 137.79)",
+          "oklch(38% 0.01243 137.79)",
+          "oklch(49% 0.01243 137.79)",
+          "oklch(61% 0.01243 137.79)",
+          "oklch(72% 0.01243 137.79)",
+          "oklch(84% 0.01243 137.79)",
+          "oklch(95% 0.01243 137.79)"
+        ]
+      },
+      "surface-container-highest": {
+        "role": "neutral",
+        "displayName": "Surface Container Highest",
+        "tonalRamp": [
+          "oklch(15% 0.01249 137.79)",
+          "oklch(26% 0.01249 137.79)",
+          "oklch(38% 0.01249 137.79)",
+          "oklch(49% 0.01249 137.79)",
+          "oklch(61% 0.01249 137.79)",
+          "oklch(72% 0.01249 137.79)",
+          "oklch(84% 0.01249 137.79)",
+          "oklch(95% 0.01249 137.79)"
+        ]
+      },
+      "outline": {
+        "role": "neutral",
+        "displayName": "Outline",
+        "tonalRamp": [
+          "oklch(15% 0.01664 142.18)",
+          "oklch(26% 0.01664 142.18)",
+          "oklch(38% 0.01664 142.18)",
+          "oklch(49% 0.01664 142.18)",
+          "oklch(61% 0.01664 142.18)",
+          "oklch(72% 0.01664 142.18)",
+          "oklch(84% 0.01664 142.18)",
+          "oklch(95% 0.01664 142.18)"
+        ]
+      },
+      "outline-variant": {
+        "role": "neutral",
+        "displayName": "Outline Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01804 140.02)",
+          "oklch(26% 0.01804 140.02)",
+          "oklch(38% 0.01804 140.02)",
+          "oklch(49% 0.01804 140.02)",
+          "oklch(61% 0.01804 140.02)",
+          "oklch(72% 0.01804 140.02)",
+          "oklch(84% 0.01804 140.02)",
+          "oklch(95% 0.01804 140.02)"
+        ]
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.19265 27.70)",
+          "oklch(26% 0.19265 27.70)",
+          "oklch(38% 0.19265 27.70)",
+          "oklch(49% 0.19265 27.70)",
+          "oklch(61% 0.19265 27.70)",
+          "oklch(72% 0.19265 27.70)",
+          "oklch(84% 0.19265 27.70)",
+          "oklch(95% 0.19265 27.70)"
+        ]
+      },
+      "on-error": {
+        "role": "error",
+        "displayName": "On Error",
+        "tonalRamp": [
+          "oklch(15% 0.00000 0.00)",
+          "oklch(26% 0.00000 0.00)",
+          "oklch(38% 0.00000 0.00)",
+          "oklch(49% 0.00000 0.00)",
+          "oklch(61% 0.00000 0.00)",
+          "oklch(72% 0.00000 0.00)",
+          "oklch(84% 0.00000 0.00)",
+          "oklch(95% 0.00000 0.00)"
+        ]
+      },
+      "error-container": {
+        "role": "error",
+        "displayName": "Error Container",
+        "tonalRamp": [
+          "oklch(15% 0.04177 25.23)",
+          "oklch(26% 0.04177 25.23)",
+          "oklch(38% 0.04177 25.23)",
+          "oklch(49% 0.04177 25.23)",
+          "oklch(61% 0.04177 25.23)",
+          "oklch(72% 0.04177 25.23)",
+          "oklch(84% 0.04177 25.23)",
+          "oklch(95% 0.04177 25.23)"
+        ]
+      },
+      "on-error-container": {
+        "role": "error",
+        "displayName": "On Error Container",
+        "tonalRamp": [
+          "oklch(15% 0.09624 27.19)",
+          "oklch(26% 0.09624 27.19)",
+          "oklch(38% 0.09624 27.19)",
+          "oklch(49% 0.09624 27.19)",
+          "oklch(61% 0.09624 27.19)",
+          "oklch(72% 0.09624 27.19)",
+          "oklch(84% 0.09624 27.19)",
+          "oklch(95% 0.09624 27.19)"
+        ]
+      },
+      "dark-primary": {
+        "role": "primary",
+        "displayName": "Dark Primary",
+        "tonalRamp": [
+          "oklch(15% 0.12197 155.20)",
+          "oklch(26% 0.12197 155.20)",
+          "oklch(38% 0.12197 155.20)",
+          "oklch(49% 0.12197 155.20)",
+          "oklch(61% 0.12197 155.20)",
+          "oklch(72% 0.12197 155.20)",
+          "oklch(84% 0.12197 155.20)",
+          "oklch(95% 0.12197 155.20)"
+        ]
+      },
+      "dark-on-primary": {
+        "role": "primary",
+        "displayName": "Dark On Primary",
+        "tonalRamp": [
+          "oklch(15% 0.07362 155.89)",
+          "oklch(26% 0.07362 155.89)",
+          "oklch(38% 0.07362 155.89)",
+          "oklch(49% 0.07362 155.89)",
+          "oklch(61% 0.07362 155.89)",
+          "oklch(72% 0.07362 155.89)",
+          "oklch(84% 0.07362 155.89)",
+          "oklch(95% 0.07362 155.89)"
+        ]
+      },
+      "dark-primary-container": {
+        "role": "primary",
+        "displayName": "Dark Primary Container",
+        "tonalRamp": [
+          "oklch(15% 0.09214 156.85)",
+          "oklch(26% 0.09214 156.85)",
+          "oklch(38% 0.09214 156.85)",
+          "oklch(49% 0.09214 156.85)",
+          "oklch(61% 0.09214 156.85)",
+          "oklch(72% 0.09214 156.85)",
+          "oklch(84% 0.09214 156.85)",
+          "oklch(95% 0.09214 156.85)"
+        ]
+      },
+      "dark-on-primary-container": {
+        "role": "primary",
+        "displayName": "Dark On Primary Container",
+        "tonalRamp": [
+          "oklch(15% 0.12359 154.66)",
+          "oklch(26% 0.12359 154.66)",
+          "oklch(38% 0.12359 154.66)",
+          "oklch(49% 0.12359 154.66)",
+          "oklch(61% 0.12359 154.66)",
+          "oklch(72% 0.12359 154.66)",
+          "oklch(84% 0.12359 154.66)",
+          "oklch(95% 0.12359 154.66)"
+        ]
+      },
+      "dark-secondary": {
+        "role": "secondary",
+        "displayName": "Dark Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.03518 151.95)",
+          "oklch(26% 0.03518 151.95)",
+          "oklch(38% 0.03518 151.95)",
+          "oklch(49% 0.03518 151.95)",
+          "oklch(61% 0.03518 151.95)",
+          "oklch(72% 0.03518 151.95)",
+          "oklch(84% 0.03518 151.95)",
+          "oklch(95% 0.03518 151.95)"
+        ]
+      },
+      "dark-on-secondary": {
+        "role": "secondary",
+        "displayName": "Dark On Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.03699 154.48)",
+          "oklch(26% 0.03699 154.48)",
+          "oklch(38% 0.03699 154.48)",
+          "oklch(49% 0.03699 154.48)",
+          "oklch(61% 0.03699 154.48)",
+          "oklch(72% 0.03699 154.48)",
+          "oklch(84% 0.03699 154.48)",
+          "oklch(95% 0.03699 154.48)"
+        ]
+      },
+      "dark-secondary-container": {
+        "role": "secondary",
+        "displayName": "Dark Secondary Container",
+        "tonalRamp": [
+          "oklch(15% 0.03532 155.26)",
+          "oklch(26% 0.03532 155.26)",
+          "oklch(38% 0.03532 155.26)",
+          "oklch(49% 0.03532 155.26)",
+          "oklch(61% 0.03532 155.26)",
+          "oklch(72% 0.03532 155.26)",
+          "oklch(84% 0.03532 155.26)",
+          "oklch(95% 0.03532 155.26)"
+        ]
+      },
+      "dark-on-secondary-container": {
+        "role": "secondary",
+        "displayName": "Dark On Secondary Container",
+        "tonalRamp": [
+          "oklch(15% 0.03511 153.20)",
+          "oklch(26% 0.03511 153.20)",
+          "oklch(38% 0.03511 153.20)",
+          "oklch(49% 0.03511 153.20)",
+          "oklch(61% 0.03511 153.20)",
+          "oklch(72% 0.03511 153.20)",
+          "oklch(84% 0.03511 153.20)",
+          "oklch(95% 0.03511 153.20)"
+        ]
+      },
+      "dark-tertiary": {
+        "role": "tertiary",
+        "displayName": "Dark Tertiary",
+        "tonalRamp": [
+          "oklch(15% 0.04721 222.71)",
+          "oklch(26% 0.04721 222.71)",
+          "oklch(38% 0.04721 222.71)",
+          "oklch(49% 0.04721 222.71)",
+          "oklch(61% 0.04721 222.71)",
+          "oklch(72% 0.04721 222.71)",
+          "oklch(84% 0.04721 222.71)",
+          "oklch(95% 0.04721 222.71)"
+        ]
+      },
+      "dark-on-tertiary": {
+        "role": "tertiary",
+        "displayName": "Dark On Tertiary",
+        "tonalRamp": [
+          "oklch(15% 0.05278 223.57)",
+          "oklch(26% 0.05278 223.57)",
+          "oklch(38% 0.05278 223.57)",
+          "oklch(49% 0.05278 223.57)",
+          "oklch(61% 0.05278 223.57)",
+          "oklch(72% 0.05278 223.57)",
+          "oklch(84% 0.05278 223.57)",
+          "oklch(95% 0.05278 223.57)"
+        ]
+      },
+      "dark-tertiary-container": {
+        "role": "tertiary",
+        "displayName": "Dark Tertiary Container",
+        "tonalRamp": [
+          "oklch(15% 0.05148 222.86)",
+          "oklch(26% 0.05148 222.86)",
+          "oklch(38% 0.05148 222.86)",
+          "oklch(49% 0.05148 222.86)",
+          "oklch(61% 0.05148 222.86)",
+          "oklch(72% 0.05148 222.86)",
+          "oklch(84% 0.05148 222.86)",
+          "oklch(95% 0.05148 222.86)"
+        ]
+      },
+      "dark-on-tertiary-container": {
+        "role": "tertiary",
+        "displayName": "Dark On Tertiary Container",
+        "tonalRamp": [
+          "oklch(15% 0.04721 222.06)",
+          "oklch(26% 0.04721 222.06)",
+          "oklch(38% 0.04721 222.06)",
+          "oklch(49% 0.04721 222.06)",
+          "oklch(61% 0.04721 222.06)",
+          "oklch(72% 0.04721 222.06)",
+          "oklch(84% 0.04721 222.06)",
+          "oklch(95% 0.04721 222.06)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Dark Surface",
+        "tonalRamp": [
+          "oklch(15% 0.01263 145.05)",
+          "oklch(26% 0.01263 145.05)",
+          "oklch(38% 0.01263 145.05)",
+          "oklch(49% 0.01263 145.05)",
+          "oklch(61% 0.01263 145.05)",
+          "oklch(72% 0.01263 145.05)",
+          "oklch(84% 0.01263 145.05)",
+          "oklch(95% 0.01263 145.05)"
+        ]
+      },
+      "dark-on-surface": {
+        "role": "neutral",
+        "displayName": "Dark On Surface",
+        "tonalRamp": [
+          "oklch(15% 0.01153 128.60)",
+          "oklch(26% 0.01153 128.60)",
+          "oklch(38% 0.01153 128.60)",
+          "oklch(49% 0.01153 128.60)",
+          "oklch(61% 0.01153 128.60)",
+          "oklch(72% 0.01153 128.60)",
+          "oklch(84% 0.01153 128.60)",
+          "oklch(95% 0.01153 128.60)"
+        ]
+      },
+      "dark-surface-variant": {
+        "role": "neutral",
+        "displayName": "Dark Surface Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01686 145.25)",
+          "oklch(26% 0.01686 145.25)",
+          "oklch(38% 0.01686 145.25)",
+          "oklch(49% 0.01686 145.25)",
+          "oklch(61% 0.01686 145.25)",
+          "oklch(72% 0.01686 145.25)",
+          "oklch(84% 0.01686 145.25)",
+          "oklch(95% 0.01686 145.25)"
+        ]
+      },
+      "dark-on-surface-variant": {
+        "role": "neutral",
+        "displayName": "Dark On Surface Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01804 140.02)",
+          "oklch(26% 0.01804 140.02)",
+          "oklch(38% 0.01804 140.02)",
+          "oklch(49% 0.01804 140.02)",
+          "oklch(61% 0.01804 140.02)",
+          "oklch(72% 0.01804 140.02)",
+          "oklch(84% 0.01804 140.02)",
+          "oklch(95% 0.01804 140.02)"
+        ]
+      },
+      "dark-surface-container-low": {
+        "role": "neutral",
+        "displayName": "Dark Surface Container Low",
+        "tonalRamp": [
+          "oklch(15% 0.01213 145.16)",
+          "oklch(26% 0.01213 145.16)",
+          "oklch(38% 0.01213 145.16)",
+          "oklch(49% 0.01213 145.16)",
+          "oklch(61% 0.01213 145.16)",
+          "oklch(72% 0.01213 145.16)",
+          "oklch(84% 0.01213 145.16)",
+          "oklch(95% 0.01213 145.16)"
+        ]
+      },
+      "dark-surface-container": {
+        "role": "neutral",
+        "displayName": "Dark Surface Container",
+        "tonalRamp": [
+          "oklch(15% 0.01191 145.19)",
+          "oklch(26% 0.01191 145.19)",
+          "oklch(38% 0.01191 145.19)",
+          "oklch(49% 0.01191 145.19)",
+          "oklch(61% 0.01191 145.19)",
+          "oklch(72% 0.01191 145.19)",
+          "oklch(84% 0.01191 145.19)",
+          "oklch(95% 0.01191 145.19)"
+        ]
+      },
+      "dark-surface-container-high": {
+        "role": "neutral",
+        "displayName": "Dark Surface Container High",
+        "tonalRamp": [
+          "oklch(15% 0.01146 145.26)",
+          "oklch(26% 0.01146 145.26)",
+          "oklch(38% 0.01146 145.26)",
+          "oklch(49% 0.01146 145.26)",
+          "oklch(61% 0.01146 145.26)",
+          "oklch(72% 0.01146 145.26)",
+          "oklch(84% 0.01146 145.26)",
+          "oklch(95% 0.01146 145.26)"
+        ]
+      },
+      "dark-surface-container-highest": {
+        "role": "neutral",
+        "displayName": "Dark Surface Container Highest",
+        "tonalRamp": [
+          "oklch(15% 0.01247 140.47)",
+          "oklch(26% 0.01247 140.47)",
+          "oklch(38% 0.01247 140.47)",
+          "oklch(49% 0.01247 140.47)",
+          "oklch(61% 0.01247 140.47)",
+          "oklch(72% 0.01247 140.47)",
+          "oklch(84% 0.01247 140.47)",
+          "oklch(95% 0.01247 140.47)"
+        ]
+      },
+      "dark-outline": {
+        "role": "neutral",
+        "displayName": "Dark Outline",
+        "tonalRamp": [
+          "oklch(15% 0.01792 142.52)",
+          "oklch(26% 0.01792 142.52)",
+          "oklch(38% 0.01792 142.52)",
+          "oklch(49% 0.01792 142.52)",
+          "oklch(61% 0.01792 142.52)",
+          "oklch(72% 0.01792 142.52)",
+          "oklch(84% 0.01792 142.52)",
+          "oklch(95% 0.01792 142.52)"
+        ]
+      },
+      "dark-outline-variant": {
+        "role": "neutral",
+        "displayName": "Dark Outline Variant",
+        "tonalRamp": [
+          "oklch(15% 0.01686 145.25)",
+          "oklch(26% 0.01686 145.25)",
+          "oklch(38% 0.01686 145.25)",
+          "oklch(49% 0.01686 145.25)",
+          "oklch(61% 0.01686 145.25)",
+          "oklch(72% 0.01686 145.25)",
+          "oklch(84% 0.01686 145.25)",
+          "oklch(95% 0.01686 145.25)"
+        ]
+      },
+      "dark-error": {
+        "role": "error",
+        "displayName": "Dark Error",
+        "tonalRamp": [
+          "oklch(15% 0.08908 26.76)",
+          "oklch(26% 0.08908 26.76)",
+          "oklch(38% 0.08908 26.76)",
+          "oklch(49% 0.08908 26.76)",
+          "oklch(61% 0.08908 26.76)",
+          "oklch(72% 0.08908 26.76)",
+          "oklch(84% 0.08908 26.76)",
+          "oklch(95% 0.08908 26.76)"
+        ]
+      },
+      "dark-on-error": {
+        "role": "error",
+        "displayName": "Dark On Error",
+        "tonalRamp": [
+          "oklch(15% 0.13359 27.32)",
+          "oklch(26% 0.13359 27.32)",
+          "oklch(38% 0.13359 27.32)",
+          "oklch(49% 0.13359 27.32)",
+          "oklch(61% 0.13359 27.32)",
+          "oklch(72% 0.13359 27.32)",
+          "oklch(84% 0.13359 27.32)",
+          "oklch(95% 0.13359 27.32)"
+        ]
+      },
+      "dark-error-container": {
+        "role": "error",
+        "displayName": "Dark Error Container",
+        "tonalRamp": [
+          "oklch(15% 0.17015 27.38)",
+          "oklch(26% 0.17015 27.38)",
+          "oklch(38% 0.17015 27.38)",
+          "oklch(49% 0.17015 27.38)",
+          "oklch(61% 0.17015 27.38)",
+          "oklch(72% 0.17015 27.38)",
+          "oklch(84% 0.17015 27.38)",
+          "oklch(95% 0.17015 27.38)"
+        ]
+      },
+      "dark-on-error-container": {
+        "role": "error",
+        "displayName": "Dark On Error Container",
+        "tonalRamp": [
+          "oklch(15% 0.04177 25.23)",
+          "oklch(26% 0.04177 25.23)",
+          "oklch(38% 0.04177 25.23)",
+          "oklch(49% 0.04177 25.23)",
+          "oklch(61% 0.04177 25.23)",
+          "oklch(72% 0.04177 25.23)",
+          "oklch(84% 0.04177 25.23)",
+          "oklch(95% 0.04177 25.23)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title-large": {
+        "displayName": "Title Large",
+        "purpose": "Top app title; inherited Material3 TitleLarge."
+      },
+      "title-medium": {
+        "displayName": "Title Medium",
+        "purpose": "Sessions panel heading; inherited Material3 TitleMedium."
+      },
+      "title-small": {
+        "displayName": "Title Small",
+        "purpose": "Session name; inherited Material3 TitleSmall."
+      },
+      "body-large": {
+        "displayName": "Body Large",
+        "purpose": "Single-line native terminal text-input page."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Supporting session status or shell title."
+      },
+      "label-large": {
+        "displayName": "Label Large",
+        "purpose": "Session number and inherited Material action labels."
+      },
+      "extra-key": {
+        "displayName": "Extra Key",
+        "purpose": "Material3 LabelMedium with app-defined zero letter spacing."
+      },
+      "terminal": {
+        "displayName": "Terminal",
+        "purpose": "Typeface.MONOSPACE fallback; actual typeface and size are user configurable."
+      }
+    },
+    "shadows": [
+      {
+        "name": "material-action-rest",
+        "value": "0dp",
+        "purpose": "Inherited filled/tonal button base elevation; native state elevation is library controlled."
+      }
+    ],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "expanded-session-panel",
+        "value": "840dp"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "New session action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Static light-fallback TerminalAction with 16dp start/end padding and up to two label lines; native ripple and text scaling remain library behavior.",
+      "html": "<button class=\"ds-action-primary\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z\"/></svg><span>New session</span></button>",
+      "css": ".ds-action-primary { box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:6px 16px;border:0;border-radius:999px;background:#006D43;color:#FFFFFF;font:500 14px/20px sans-serif;letter-spacing:.1px;cursor:pointer; } .ds-action-primary:hover { filter:brightness(.97); } .ds-action-primary:focus-visible { outline:2px solid #006D43;outline-offset:2px; } .ds-action-primary:active { filter:brightness(.92); } .ds-action-primary svg { flex-shrink:0; } .ds-action-primary span { min-width:0;max-height:40px;overflow:hidden;white-space:normal; }"
+    },
+    {
+      "name": "Resume Codex action",
+      "kind": "button",
+      "refersTo": "button-tonal",
+      "description": "Static light-fallback TerminalAction with 16dp start/end padding and up to two label lines; native ripple and text scaling remain library behavior.",
+      "html": "<button class=\"ds-action-tonal\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M13 3a9 9 0 0 0-8.7 7H1l4 4 4-4H6.4A7 7 0 1 1 8 18l-1.4 1.4A9 9 0 1 0 13 3zm-1 4v6l5 3 1-1.7-4-2.3V7z\"/></svg><span>Resume Codex</span></button>",
+      "css": ".ds-action-tonal { box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:6px 16px;border:0;border-radius:999px;background:#D0E8D6;color:#0A1F13;font:500 14px/20px sans-serif;letter-spacing:.1px;cursor:pointer; } .ds-action-tonal:hover { filter:brightness(.97); } .ds-action-tonal:focus-visible { outline:2px solid #006D43;outline-offset:2px; } .ds-action-tonal:active { filter:brightness(.92); } .ds-action-tonal svg { flex-shrink:0; } .ds-action-tonal span { min-width:0;max-height:40px;overflow:hidden;white-space:normal; }"
+    },
+    {
+      "name": "Session row",
+      "kind": "nav",
+      "refersTo": "session-row",
+      "description": "Static light-fallback session row; unselected focus uses a higher tonal surface and a 2dp primary outline.",
+      "html": "<button class=\"ds-session\"><span class=\"ds-session-badge\">1</span><span class=\"ds-session-copy\"><span class=\"ds-session-title\">Session 1</span><span class=\"ds-session-status\">Running</span></span></button>",
+      "css": ".ds-session { box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:12px;border:0;border-radius:28px;text-align:start;background:transparent;color:#181D18;cursor:pointer; } .ds-session .ds-session-badge { display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:16px;background:#D0E8D6;color:#0A1F13;font:500 14px/20px sans-serif; } .ds-session .ds-session-copy { display:flex;flex-direction:column;gap:4px;min-width:0; } .ds-session .ds-session-title { font:500 14px/20px sans-serif; } .ds-session .ds-session-status { overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#414941;font:400 12px/16px sans-serif; } .ds-session:hover { background:#DCE5DA; } .ds-session:focus-visible { background:#E4EAE2;outline:2px solid #006D43;outline-offset:-2px; } .ds-session:active { background:#D0E8D6; }"
+    },
+    {
+      "name": "Selected session",
+      "kind": "nav",
+      "refersTo": "session-row-selected",
+      "description": "Static light-fallback selected session; focus keeps the secondary-container fill and adds a 2dp primary outline.",
+      "html": "<button class=\"ds-session-selected\" aria-current=\"true\"><span class=\"ds-session-badge\">1</span><span class=\"ds-session-copy\"><span class=\"ds-session-title\">Session 1</span><span class=\"ds-session-status\">Running</span></span></button>",
+      "css": ".ds-session-selected { box-sizing:border-box;display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:12px;border:0;border-radius:28px;text-align:start;background:#D0E8D6;color:#0A1F13;cursor:pointer; } .ds-session-selected .ds-session-badge { display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:16px;background:#D0E8D6;color:#0A1F13;font:500 14px/20px sans-serif; } .ds-session-selected .ds-session-copy { display:flex;flex-direction:column;gap:4px;min-width:0; } .ds-session-selected .ds-session-title { font:500 14px/20px sans-serif; } .ds-session-selected .ds-session-status { overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#0A1F13;font:400 12px/16px sans-serif; } .ds-session-selected:hover { background:#DCE5DA; } .ds-session-selected:focus-visible { background:#D0E8D6;outline:2px solid #006D43;outline-offset:-2px; } .ds-session-selected:active { background:#D0E8D6; }"
+    },
+    {
+      "name": "Extra key",
+      "kind": "button",
+      "refersTo": "extra-key",
+      "description": "Static solid idle key at the 48dp minimum target; native Material background tint preserves pressed ripple, repeats and popups.",
+      "html": "<button class=\"ds-extra-key\">Tab</button>",
+      "css": ".ds-extra-key { box-sizing:border-box;min-width:48px;min-height:48px;margin:0 4px;padding:0 4px;border:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-radius:6px;background:#E4EAE2;background-clip:padding-box;color:#181D18;font:500 12px/16px sans-serif;letter-spacing:0;white-space:nowrap;cursor:pointer; } .ds-extra-key:hover { filter:brightness(.97); } .ds-extra-key:focus-visible { outline:2px solid #006D43;outline-offset:1px; } .ds-extra-key:active { background-color:#D0E8D6;color:#181D18; }"
+    },
+    {
+      "name": "Pressed active modifier",
+      "kind": "button",
+      "refersTo": "extra-key-active",
+      "description": "Static active modifier during a press. Native release restores idle fill while modifier text independently tracks active or locked state; row height cannot shrink below 48dp.",
+      "html": "<button class=\"ds-extra-key-active\" aria-pressed=\"true\">CTRL</button>",
+      "css": ".ds-extra-key-active { box-sizing:border-box;min-width:48px;min-height:48px;margin:0 4px;padding:0 4px;border:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-radius:6px;background:#D0E8D6;background-clip:padding-box;color:#0A1F13;font:500 12px/16px sans-serif;letter-spacing:0;white-space:nowrap;cursor:pointer; } .ds-extra-key-active:hover { filter:brightness(.97); } .ds-extra-key-active:focus-visible { outline:2px solid #006D43;outline-offset:1px; } .ds-extra-key-active:active { background-color:#D0E8D6;color:#0A1F13; }"
+    },
+    {
+      "name": "Terminal visibility toggle",
+      "kind": "button",
+      "refersTo": "visibility-toggle",
+      "description": "Static idle light-fallback preview; native checked state uses the secondary container pair.",
+      "html": "<button class=\"ds-visibility\" aria-label=\"Keep terminal visible\" aria-pressed=\"false\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M19 7h-8v6h8V7zm2-4H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 16H3V5h18v14z\"/></svg></button>",
+      "css": ".ds-visibility { display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:24px;background:transparent;color:#414941;cursor:pointer; } .ds-visibility:hover { background:#E4EAE2; } .ds-visibility:focus-visible { outline:2px solid #006D43;outline-offset:1px; } .ds-visibility:active,.ds-visibility[aria-pressed=\"true\"] { background:#D0E8D6;color:#0A1F13; }"
+    },
+    {
+      "name": "Terminal text input",
+      "kind": "input",
+      "refersTo": "terminal-text-input",
+      "description": "Static approximation of the native single-line EditText; the underline/focus preview is illustrative inherited platform treatment.",
+      "html": "<input class=\"ds-terminal-input\" type=\"text\" aria-label=\"Terminal text input\" placeholder=\"Terminal input\"/>",
+      "css": ".ds-terminal-input { width:100%;min-height:48px;padding:0;border:0;border-bottom:1px solid #717970;border-radius:0;background:#F6FBF4;color:#181D18;font:400 16px/24px sans-serif;letter-spacing:.5px; } .ds-terminal-input::placeholder { color:#414941; } .ds-terminal-input:hover { border-bottom-color:#181D18; } .ds-terminal-input:focus-visible { outline:0;border-bottom:2px solid #006D43; }"
+    },
+    {
+      "name": "Sessions panel",
+      "kind": "nav",
+      "refersTo": "session-panel",
+      "description": "Static compact light-fallback preview: width is min(320dp, usable root width minus 16dp), recomputed on each native compact resize. Expanded mode stays 320dp at 840dp and above. The header stacks according to measured title and action width.",
+      "html": "<nav class=\"ds-session-panel\" aria-label=\"Sessions\"><div class=\"ds-panel-heading\"><span class=\"ds-panel-title\">Sessions</span><div class=\"ds-panel-actions\"><button class=\"ds-panel-icon\" aria-label=\"Toggle keyboard\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M20,5H4c-1.1,0 -2,0.9 -2,2v10c0,1.1 0.9,2 2,2h16c1.1,0 2,-0.9 2,-2V7c0,-1.1 -0.9,-2 -2,-2zM20,17H4V7h16v10zM6,8h2v2H6zM9,8h2v2H9zM12,8h2v2h-2zM15,8h3v2h-3zM6,11h2v2H6zM9,11h2v2H9zM12,11h2v2h-2zM15,11h3v2h-3zM8,14h8v2H8z\"/></svg></button><button class=\"ds-panel-icon\" aria-label=\"Settings\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M19.14,12.94c0.04,-0.3 0.06,-0.61 0.06,-0.94c0,-0.32 -0.02,-0.64 -0.07,-0.94l2.03,-1.58c0.18,-0.14 0.23,-0.41 0.12,-0.61l-1.92,-3.32c-0.12,-0.22 -0.37,-0.29 -0.59,-0.22l-2.39,0.96c-0.5,-0.38 -1.03,-0.7 -1.62,-0.94L14.4,2.81c-0.04,-0.24 -0.24,-0.41 -0.48,-0.41h-3.84c-0.24,0 -0.43,0.17 -0.47,0.41L9.25,5.35C8.66,5.59 8.12,5.92 7.63,6.29L5.24,5.33c-0.22,-0.08 -0.47,0 -0.59,0.22L2.74,8.87C2.62,9.08 2.66,9.34 2.86,9.48l2.03,1.58C4.84,11.36 4.8,11.69 4.8,12s0.02,0.64 0.07,0.94l-2.03,1.58c-0.18,0.14 -0.23,0.41 -0.12,0.61l1.92,3.32c0.12,0.22 0.37,0.29 0.59,0.22l2.39,-0.96c0.5,0.38 1.03,0.7 1.62,0.94l0.36,2.54c0.05,0.24 0.24,0.41 0.48,0.41h3.84c0.24,0 0.44,-0.17 0.47,-0.41l0.36,-2.54c0.59,-0.24 1.13,-0.56 1.62,-0.94l2.39,0.96c0.22,0.08 0.47,0 0.59,-0.22l1.92,-3.32c0.12,-0.22 0.07,-0.47 -0.12,-0.61L19.14,12.94zM12,15.6c-1.98,0 -3.6,-1.62 -3.6,-3.6s1.62,-3.6 3.6,-3.6s3.6,1.62 3.6,3.6S13.98,15.6 12,15.6z\"/></svg></button><button class=\"ds-panel-icon\" aria-label=\"Close sessions\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z\"/></svg></button></div></div><div class=\"ds-panel-content\">Session list and actions</div></nav>",
+      "css": ".ds-session-panel { width:min(320px, max(0px, calc(100% - 16px)));max-width:100%;border-radius:16px;background:#F0F5EE;color:#181D18; } .ds-panel-heading { display:flex;flex-wrap:wrap;align-items:center;min-height:64px;font:500 16px/24px sans-serif; } .ds-panel-title { flex:1 0 auto;min-width:max-content;padding-inline-start:20px; } .ds-panel-actions { display:flex;margin-inline-start:auto; } .ds-panel-icon { display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;padding:0;border:0;border-radius:24px;background:transparent;color:#414941;cursor:pointer; } .ds-panel-content { padding:12px;font:400 12px/16px sans-serif;color:#414941; } .ds-session-panel:hover { background:#F0F5EE; } .ds-session-panel:focus-visible { outline:2px solid #006D43;outline-offset:2px; } .ds-panel-icon:hover { background:#E4EAE2; } .ds-panel-icon:focus-visible { outline:2px solid #006D43;outline-offset:-2px; } .ds-panel-icon:active { background:#D0E8D6; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Polished native Android utility",
+    "overview": "The interface uses Material Design 3 on the existing Java/Android Views stack. Native controls provide familiar navigation, tonal surfaces and readable labels around the custom terminal renderer. This records core Material 3 implementation, not a Compose conversion or a complete Material 3 Expressive migration.\n\nThe terminal remains the main content. Controls have deliberate touch areas, sessions remain reachable through an explicit control, and the same session panel adapts to the available window. Dynamic color personalizes the Android chrome; a green light/dark palette supplies the static fallback. Terminal colors and fonts remain user controlled.",
+    "keyCharacteristics": [
+      "Native Material 3 Views controls and semantic color roles.",
+      "Readable terminal content with separate Android interface typography.",
+      "Explicit session access that preserves Android edge Back gestures.",
+      "A modal panel in compact windows and a persistent panel in expanded windows.",
+      "Single-line extra keys that scroll horizontally rather than wrap."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Pair Rule.",
+        "body": "Resolve interface colors through Material attributes and pair each container with its matching on-color; hard-coded fallback colors belong in resources, not individual controls.",
+        "section": "colors"
+      },
+      {
+        "name": "The Terminal Boundary Rule.",
+        "body": "Keep ANSI colors, terminal background and terminal font preferences independent of the Android Material palette.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Type Systems Rule.",
+        "body": "Use scalable Material text appearances for Android controls and preserve the terminal renderer's configurable monospace typography.",
+        "section": "typography"
+      },
+      {
+        "name": "Compact terminal controls.",
+        "body": "The terminal bar is 48dp with TitleMedium text and 48dp targets. Sessions has 8dp vertical clearance and scrolls as a whole when a short window cannot fit its controls. The keyboard extra key uses the shared vector and a localized description. Autocorrect and voice typing remain opt-in under Terminal I/O. The terminal inset stays black in both themes; PiP also uses a black root and window backdrop.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "**Do** use Material semantic color pairs for Android controls and retain dynamic-color support.",
+      "**Do** keep the terminal's saved font, colors and custom key layout independent of the interface theme.",
+      "**Do** use explicit Sessions access and preserve Android's edge Back gesture.",
+      "**Do** adapt the same session panel to current window width, including resize back to compact mode.",
+      "**Do** retain scalable interface text, minimum 48dp key targets and horizontal key scrolling in narrow windows.",
+      "**Do** use content descriptions and explicit status text alongside icons and color."
+    ],
+    "donts": [
+      "**Don't** wrap the extra-key toolbar into oversized controls or replace the user's key layout.",
+      "**Don't** introduce a Compose dependency or describe the existing Views implementation as a complete Expressive migration.",
+      "**Don't** make a terminal color scheme follow the Android wallpaper palette automatically.",
+      "**Don't** treat legacy shared Material Components themes or inherited native input styling as newly standardized Material 3 patterns."
+    ]
+  }
+}

@@ -1,9 +1,18 @@
-<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/session_title"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="@drawable/session_background_selected"
-    android:ellipsize="marquee"
-    android:gravity="start|center_vertical"
-    android:padding="6dip"
-    android:textSize="14sp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:minHeight="68dp" android:padding="12dp" android:gravity="center_vertical"
+    android:orientation="horizontal" android:background="@drawable/terminal_session_background">
+    <TextView android:id="@+id/session_number" android:layout_width="32dp" android:layout_height="32dp"
+        android:gravity="center" android:textAppearance="?attr/textAppearanceLabelLarge"
+        android:importantForAccessibility="no"
+        android:textColor="?attr/colorOnSecondaryContainer" android:background="@drawable/terminal_session_badge" />
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+        android:layout_marginStart="12dp" android:orientation="vertical">
+        <TextView android:id="@+id/session_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleSmall" android:textColor="?attr/colorOnSurface"
+            android:maxLines="2" android:ellipsize="end" />
+        <TextView android:id="@+id/session_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" android:textColor="?attr/colorOnSurfaceVariant" android:textAppearance="?attr/textAppearanceBodySmall"
+            android:maxLines="1" android:ellipsize="end" />
+    </LinearLayout>
+</LinearLayout>

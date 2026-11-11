@@ -4,6 +4,23 @@ import junit.framework.TestCase;
 
 public class ByteQueueTest extends TestCase {
 
+    public void testNonblockingWriteIsAtomicAndValidatesItsRange() {
+        ByteQueue queue = new ByteQueue(4);
+        assertTrue(queue.write(new byte[]{1, 2, 3}, 0, 3, false));
+        assertFalse(queue.write(new byte[]{4, 5}, 0, 2, false));
+        byte[] buffer = new byte[4];
+        assertEquals(3, queue.read(buffer, false));
+        assertArrayEquals(new byte[]{1, 2, 3, 0}, buffer);
+        try {
+            queue.write(buffer, -1, 1, false);
+            fail("Accepted a negative offset");
+        } catch (IllegalArgumentException expected) { }
+        try {
+            queue.write(buffer, 1, Integer.MAX_VALUE, false);
+            fail("Accepted an overflowing range");
+        } catch (IllegalArgumentException expected) { }
+    }
+
 	private static void assertArrayEquals(byte[] expected, byte[] actual) {
 		if (expected.length != actual.length) {
 			fail("Difference array length");

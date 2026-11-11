@@ -1,6 +1,7 @@
 package com.termux.app.terminal.io;
 
 import android.graphics.Rect;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,6 +24,8 @@ public class FullScreenWorkAround {
 
 
     public static void apply(TermuxActivity activity) {
+        // Modern keyboard insets are already handled by TermuxActivityRootView.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) return;
         new FullScreenWorkAround(activity);
     }
 

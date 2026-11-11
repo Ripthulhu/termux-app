@@ -90,7 +90,9 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
     public Cursor queryChildDocuments(String parentDocumentId, String[] projection, String sortOrder) throws FileNotFoundException {
         final MatrixCursor result = new MatrixCursor(projection != null ? projection : DEFAULT_DOCUMENT_PROJECTION);
         final File parent = getFileForDocId(parentDocumentId);
-        for (File file : parent.listFiles()) {
+        File[] children = parent.listFiles();
+        if (children == null) throw new FileNotFoundException("Cannot list directory: " + parentDocumentId);
+        for (File file : children) {
             includeFile(result, null, file);
         }
         return result;
@@ -117,10 +119,16 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
 
     @Override
     public String createDocument(String parentDocumentId, String mimeType, String displayName) throws FileNotFoundException {
-        File newFile = new File(parentDocumentId, displayName);
+        File parent = getFileForDocId(parentDocumentId);
+        if (!parent.isDirectory() || displayName == null || displayName.isEmpty() ||
+            displayName.equals(".") || displayName.equals("..") || displayName.indexOf('/') >= 0 ||
+            displayName.indexOf('\\') >= 0 || displayName.indexOf('\0') >= 0) {
+            throw new FileNotFoundException("Invalid document name");
+        }
+        File newFile = new File(parent, displayName);
         int noConflictId = 2;
         while (newFile.exists()) {
-            newFile = new File(parentDocumentId, displayName + " (" + noConflictId++ + ")");
+            newFile = new File(parent, displayName + " (" + noConflictId++ + ")");
         }
         try {
             boolean succeeded;
@@ -169,15 +177,10 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
             final File file = pending.removeFirst();
             // Avoid directories outside the $HOME directory linked with symlinks (to avoid e.g. search
             // through the whole SD card).
-            boolean isInsideHome;
-            try {
-                isInsideHome = file.getCanonicalPath().startsWith(TermuxConstants.TERMUX_HOME_DIR_PATH);
-            } catch (IOException e) {
-                isInsideHome = true;
-            }
-            if (isInsideHome) {
+            if (isChildDocument(BASE_DIR.getPath(), file.getPath())) {
                 if (file.isDirectory()) {
-                    Collections.addAll(pending, file.listFiles());
+                    File[] children = file.listFiles();
+                    if (children != null) Collections.addAll(pending, children);
                 } else {
                     if (file.getName().toLowerCase().contains(query)) {
                         includeFile(result, null, file);
@@ -191,7 +194,15 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
 
     @Override
     public boolean isChildDocument(String parentDocumentId, String documentId) {
-        return documentId.startsWith(parentDocumentId);
+        try {
+            // A grant follows the resolved directory, including an explicitly selected storage link.
+            String parent = getFileForDocId(parentDocumentId).getCanonicalPath();
+            String child = getFileForDocId(documentId).getCanonicalPath();
+            String prefix = parent.endsWith(File.separator) ? parent : parent + File.separator;
+            return child.equals(parent) || child.startsWith(prefix);
+        } catch (IOException | SecurityException e) {
+            return false;
+        }
     }
 
     /**
@@ -208,6 +219,7 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
      * Get the file given a document id (the reverse of {@link #getDocIdForFile(File)}).
      */
     private static File getFileForDocId(String docId) throws FileNotFoundException {
+        if (docId == null) throw new FileNotFoundException("Missing document ID");
         final File f = new File(docId);
         if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath() + " not found");
         return f;

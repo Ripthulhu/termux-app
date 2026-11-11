@@ -82,6 +82,15 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
         return !currentValue;
     }
 
+    public boolean shouldKeepTerminalVisible() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_TERMINAL_VISIBLE,
+            TERMUX_APP.DEFAULT_VALUE_KEEP_TERMINAL_VISIBLE);
+    }
+
+    public void setKeepTerminalVisible(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_TERMINAL_VISIBLE, value, false);
+    }
+
 
 
     public boolean isTerminalMarginAdjustmentEnabled() {
@@ -104,6 +113,15 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
 
     public boolean isSoftKeyboardEnabledOnlyIfNoHardware() {
         return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_SOFT_KEYBOARD_ENABLED_ONLY_IF_NO_HARDWARE, TERMUX_APP.DEFAULT_VALUE_KEY_SOFT_KEYBOARD_ENABLED_ONLY_IF_NO_HARDWARE);
+    }
+
+    public boolean isSoftKeyboardTextInputEnabled() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_SOFT_KEYBOARD_TEXT_INPUT,
+            TERMUX_APP.DEFAULT_VALUE_SOFT_KEYBOARD_TEXT_INPUT);
+    }
+
+    public void setSoftKeyboardTextInputEnabled(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, TERMUX_APP.KEY_SOFT_KEYBOARD_TEXT_INPUT, value, false);
     }
 
     public void setSoftKeyboardEnabledOnlyIfNoHardware(boolean value) {
