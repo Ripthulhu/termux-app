@@ -116,6 +116,9 @@ public final class TermuxPreferenceConstants {
         public static final String KEY_SOFT_KEYBOARD_ENABLED = "soft_keyboard_enabled";
         public static final boolean DEFAULT_VALUE_KEY_SOFT_KEYBOARD_ENABLED = true;
 
+        public static final String KEY_SOFT_KEYBOARD_TEXT_INPUT = "soft_keyboard_text_input";
+        public static final boolean DEFAULT_VALUE_SOFT_KEYBOARD_TEXT_INPUT = false;
+
         /**
          * Defines the key for whether the soft keyboard will be enabled only if no hardware keyboard
          * attached, for cases where users want to use a hardware keyboard instead.

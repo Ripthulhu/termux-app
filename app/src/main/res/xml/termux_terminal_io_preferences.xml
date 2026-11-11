@@ -6,12 +6,21 @@
 
         <SwitchPreferenceCompat
             app:key="soft_keyboard_enabled"
+            app:iconSpaceReserved="false"
             app:summaryOff="@string/termux_soft_keyboard_enabled_off"
             app:summaryOn="@string/termux_soft_keyboard_enabled_on"
             app:title="@string/termux_soft_keyboard_enabled_title" />
 
         <SwitchPreferenceCompat
+            app:key="soft_keyboard_text_input"
+            app:iconSpaceReserved="false"
+            app:defaultValue="false"
+            app:summary="@string/termux_soft_keyboard_text_input_summary"
+            app:title="@string/termux_soft_keyboard_text_input_title" />
+
+        <SwitchPreferenceCompat
             app:key="soft_keyboard_enabled_only_if_no_hardware"
+            app:iconSpaceReserved="false"
             app:summaryOff="@string/termux_soft_keyboard_enabled_only_if_no_hardware_off"
             app:summaryOn="@string/termux_soft_keyboard_enabled_only_if_no_hardware_on"
             app:title="@string/termux_soft_keyboard_enabled_only_if_no_hardware_title" />

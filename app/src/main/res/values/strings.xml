@@ -190,6 +190,9 @@
             <!-- Keyboard Category -->
             <string name="termux_keyboard_header">Keyboard</string>
 
+                <string name="termux_soft_keyboard_text_input_title">Autocorrect and voice typing</string>
+                <string name="termux_soft_keyboard_text_input_summary">Suggestions and autocorrect for Codex prompts. May change commands. Voice typing must also be enabled in your keyboard.</string>
+
                 <!-- Soft Keyboard -->
                 <string name="termux_soft_keyboard_enabled_title">Soft Keyboard Enabled</string>
                 <string name="termux_soft_keyboard_enabled_off">Soft keyboard will be disabled.</string>

@@ -3,6 +3,9 @@ package com.termux.app;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.view.View;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import com.google.android.material.color.MaterialColors;
 
 import com.google.android.material.button.MaterialButton;
 import com.termux.R;
@@ -53,6 +56,18 @@ public class TermuxPictureInPictureTest {
         activity.onPictureInPictureModeChanged(true, new Configuration());
         activity.onPictureInPictureModeChanged(false, new Configuration());
         assertEquals(View.GONE, activity.getTerminalToolbarViewPager().getVisibility());
+    }
+
+    @Test @Config(qualifiers = "notnight") public void previewUsesBlackPaddingAndRestoresTheLightAppSurface() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        int surface = MaterialColors.getColor(activity.getTerminalView(), com.google.android.material.R.attr.colorSurface);
+        assertFalse("Check against a light surface", surface == Color.BLACK);
+        activity.onPictureInPictureModeChanged(true, new Configuration());
+        assertEquals(Color.BLACK, ((ColorDrawable) activity.getWindow().getDecorView().getBackground()).getColor());
+        assertEquals(Color.BLACK, ((ColorDrawable) activity.getTermuxActivityRootView().getBackground()).getColor());
+        activity.onPictureInPictureModeChanged(false, new Configuration());
+        assertEquals(surface, ((ColorDrawable) activity.getWindow().getDecorView().getBackground()).getColor());
+        assertEquals(Color.TRANSPARENT, ((ColorDrawable) activity.getTermuxActivityRootView().getBackground()).getColor());
     }
 
     @Test

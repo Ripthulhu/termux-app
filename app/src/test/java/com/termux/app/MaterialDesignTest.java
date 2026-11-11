@@ -90,6 +90,39 @@ public class MaterialDesignTest {
         }
     }
 
+    @Test public void sessionPanelHasClearanceAndScrollsInShortWindows() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        androidx.core.widget.NestedScrollView panel = activity.findViewById(R.id.left_drawer);
+        int gap = Math.round(8 * activity.getResources().getDisplayMetrics().density);
+        for (int width : new int[]{400, 1000, 400}) {
+            layout(activity.findViewById(R.id.activity_termux_root_relative_layout), width);
+            android.view.ViewGroup.MarginLayoutParams params = (android.view.ViewGroup.MarginLayoutParams) panel.getLayoutParams();
+            assertEquals(gap, params.topMargin);
+            assertEquals(gap, params.bottomMargin);
+        }
+        int height = Math.round(120 * activity.getResources().getDisplayMetrics().density);
+        panel.measure(View.MeasureSpec.makeMeasureSpec(800, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
+        panel.layout(0, 0, 800, height);
+        assertTrue("Short windows keep the actions reachable by scrolling", panel.getChildAt(0).getHeight() > panel.getHeight());
+        assertEquals(Math.round(48 * activity.getResources().getDisplayMetrics().density),
+            activity.findViewById(R.id.terminal_navigation_bar).getHeight());
+    }
+
+    @Test @Config(qualifiers = "notnight") public void terminalInsetStaysBlackInTheLightTheme() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        android.view.ViewGroup.MarginLayoutParams terminal = (android.view.ViewGroup.MarginLayoutParams)
+            activity.getTerminalView().getLayoutParams();
+        android.view.ViewGroup.MarginLayoutParams root = (android.view.ViewGroup.MarginLayoutParams)
+            activity.findViewById(R.id.activity_termux_root_relative_layout).getLayoutParams();
+        assertEquals(Math.round(3 * activity.getResources().getDisplayMetrics().density), terminal.leftMargin);
+        assertEquals(terminal.leftMargin, terminal.rightMargin);
+        assertEquals(0, root.leftMargin);
+        assertEquals(0, root.rightMargin);
+        assertEquals(android.graphics.Color.BLACK,
+            ((android.graphics.drawable.ColorDrawable) activity.getDrawer().getBackground()).getColor());
+    }
+
     @Test @Config(qualifiers = "notnight") public void lightThemeHasReadableColorPairs() { checkContrast(); }
     @Test @Config(qualifiers = "night") public void darkThemeHasReadableColorPairs() { checkContrast(); }
 

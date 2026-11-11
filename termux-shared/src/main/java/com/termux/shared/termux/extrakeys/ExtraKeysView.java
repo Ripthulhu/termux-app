@@ -412,9 +412,7 @@ public final class ExtraKeysView extends GridLayout {
                     button = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
                 }
 
-                button.setText(buttonInfo.getDisplay());
-                if ("SHIFT TAB".equals(buttonInfo.getKey()))
-                    button.setContentDescription("Shift+Tab");
+                setButtonDisplay(button, buttonInfo);
                 button.setAllCaps(mButtonTextAllCaps);
                 TextViewCompat.setTextAppearance(button, com.google.android.material.R.style.TextAppearance_Material3_LabelMedium);
                 button.setTextColor(mButtonTextColor);
@@ -618,7 +616,7 @@ public final class ExtraKeysView extends GridLayout {
             button = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
             button.setTextColor(mButtonTextColor);
         }
-        button.setText(extraButton.getDisplay());
+        setButtonDisplay(button, extraButton);
         button.setAllCaps(mButtonTextAllCaps);
         button.setPadding(0, 0, 0, 0);
         button.setMinHeight(0);
@@ -673,6 +671,20 @@ public final class ExtraKeysView extends GridLayout {
             state.setIsActive(false);
 
         return true;
+    }
+
+    private void setButtonDisplay(MaterialButton button, ExtraKeyButton info) {
+        button.setText(info.getDisplay());
+        if ("SHIFT TAB".equals(info.getKey())) button.setContentDescription("Shift+Tab");
+        if ("KEYBOARD".equals(info.getKey()) &&
+            ("⌨".equals(info.getDisplay()) || "KEYBOARD".equals(info.getDisplay()))) {
+            button.setText("");
+            button.setIconResource(R.drawable.ic_keyboard);
+            button.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
+            button.setIconPadding(0);
+            button.setIconTint(ColorStateList.valueOf(mButtonTextColor));
+            button.setContentDescription(getContext().getString(R.string.extra_keys_toggle_keyboard));
+        }
     }
 
     public MaterialButton createSpecialButton(String buttonKey, boolean needUpdate) {

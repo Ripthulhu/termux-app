@@ -508,7 +508,8 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         RelativeLayout relativeLayout = findViewById(R.id.activity_termux_root_relative_layout);
         int marginHorizontal = mProperties.getTerminalMarginHorizontal();
         int marginVertical = mProperties.getTerminalMarginVertical();
-        ViewUtils.setLayoutMarginsInDp(relativeLayout, marginHorizontal, marginVertical, marginHorizontal, marginVertical);
+        ViewUtils.setLayoutMarginsInDp(relativeLayout, 0, marginVertical, 0, marginVertical);
+        ViewUtils.setLayoutMarginsInDp(findViewById(R.id.terminal_view), marginHorizontal, 0, marginHorizontal, 0);
     }
 
 
@@ -679,6 +680,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         panel.findViewById(R.id.close_sessions_button).setVisibility(expanded ? View.GONE : View.VISIBLE);
         if (expanded) {
             RelativeLayout.LayoutParams panelParams = new RelativeLayout.LayoutParams(panelWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+            panelParams.topMargin = panelParams.bottomMargin = Math.round(8 * density);
             panelParams.addRule(RelativeLayout.BELOW, R.id.terminal_navigation_bar);
             panelParams.addRule(RelativeLayout.ALIGN_PARENT_START);
             panelParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -686,6 +688,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             panel.setVisibility(View.VISIBLE);
         } else {
             DrawerLayout.LayoutParams panelParams = new DrawerLayout.LayoutParams(compactWidth, ViewGroup.LayoutParams.MATCH_PARENT, GravityCompat.START);
+            panelParams.topMargin = panelParams.bottomMargin = Math.round(8 * density);
             getDrawer().addView(panel, panelParams);
         }
         // DrawerLayout hides its content from accessibility while a modal drawer is open.
@@ -767,6 +770,9 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
 
     private void updatePictureInPictureViews(boolean inPictureInPictureMode) {
         if (mPreferences == null) return;
+        mTermuxActivityRootView.setBackgroundColor(inPictureInPictureMode ? Color.BLACK : Color.TRANSPARENT);
+        getWindow().getDecorView().setBackgroundColor(inPictureInPictureMode ? Color.BLACK :
+            MaterialColors.getColor(mTerminalView, com.google.android.material.R.attr.colorSurface));
         updateSessionPanel(findViewById(R.id.activity_termux_root_relative_layout).getWidth());
         findViewById(R.id.terminal_navigation_bar).setVisibility(inPictureInPictureMode ? View.GONE : View.VISIBLE);
         getTerminalToolbarViewPager().setVisibility(!inPictureInPictureMode &&

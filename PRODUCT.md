@@ -24,6 +24,8 @@ Native Java/Android Views app with an existing Material Components dependency an
 
 System Back must retain the screen edges. Session access uses an explicit control. Support Tab, Shift+Tab, arrows, Enter and Escape. Preserve the existing file-access protections and nonblocking, bounded terminal input.
 
+The Android keyboard can opt into suggestions, autocorrect and voice typing for Codex prompts. Command-oriented input remains the default. Keep the terminal's text inset, with a black surrounding area in light/dark themes and PiP.
+
 ## Brand Commitments
 
 Use Material Design 3 for Android controls, navigation, typography, color and interaction. The user explicitly rejected oversized, wrapping controls and requested a polished interface.

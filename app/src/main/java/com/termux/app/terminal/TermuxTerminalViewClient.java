@@ -14,6 +14,7 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
 
     private boolean mShowSoftKeyboardIgnoreOnce;
     private boolean mShowSoftKeyboardWithDelayOnce;
+    private boolean mSoftKeyboardTextInputEnabled;
 
     private boolean mTerminalCursorBlinkerStateAlreadySet;
 
@@ -86,6 +88,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
      */
     public void onCreate() {
         onReloadProperties();
+        mSoftKeyboardTextInputEnabled = shouldUseTextInput();
 
         mActivity.getTerminalView().setTextSize(mActivity.getPreferences().getFontSize());
         mActivity.getTerminalView().setKeepScreenOn(mActivity.getPreferences().shouldKeepScreenOn());
@@ -109,6 +112,13 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
      * Should be called when mActivity.onResume() is called
      */
     public void onResume() {
+        boolean textInputEnabled = shouldUseTextInput();
+        if (mSoftKeyboardTextInputEnabled != textInputEnabled) {
+            mSoftKeyboardTextInputEnabled = textInputEnabled;
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .restartInput(mActivity.getTerminalView());
+        }
+
         // Show the soft keyboard if required
         setSoftKeyboardState(true, mActivity.isActivityRecreated());
 
@@ -213,6 +223,11 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
     @Override
     public boolean shouldEnforceCharBasedInput() {
         return mActivity.getProperties().isEnforcingCharBasedInput();
+    }
+
+    @Override
+    public boolean shouldUseTextInput() {
+        return mActivity.getPreferences().isSoftKeyboardTextInputEnabled();
     }
 
     @Override

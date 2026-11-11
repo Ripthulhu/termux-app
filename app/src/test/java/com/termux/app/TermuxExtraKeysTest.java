@@ -1,6 +1,13 @@
 package com.termux.app;
 
 import android.view.View;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.HorizontalScrollView;
+
+import com.termux.R;
+import com.google.android.material.button.MaterialButton;
+import com.termux.shared.termux.extrakeys.ExtraKeysView;
 
 import com.termux.shared.termux.extrakeys.ExtraKeyButton;
 import com.termux.shared.termux.extrakeys.ExtraKeysConstants;
@@ -13,6 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Robolectric;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
@@ -25,6 +34,25 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 30)
 public class TermuxExtraKeysTest {
+    @Test public void keyboardShortcutHasAnIconAndTogglesTheImeWithoutHidingExtraKeys() {
+        TermuxActivity activity = Robolectric.buildActivity(TermuxActivity.class).create().get();
+        HorizontalScrollView scroll = (HorizontalScrollView) activity.getLayoutInflater()
+            .inflate(R.layout.view_terminal_toolbar_extra_keys, null);
+        ExtraKeysView keys = scroll.findViewById(R.id.terminal_toolbar_extra_keys);
+        keys.setExtraKeysViewClient(activity.getTermuxTerminalExtraKeys());
+        keys.reload(activity.getTermuxTerminalExtraKeys().getExtraKeysInfo(), 48);
+        MaterialButton keyboard = (MaterialButton) keys.getChildAt(6);
+        assertTrue(keyboard.getText().length() == 0);
+        assertTrue(keyboard.getIcon() != null);
+        assertEquals(activity.getString(com.termux.shared.R.string.extra_keys_toggle_keyboard), keyboard.getContentDescription());
+        InputMethodManager ime = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.performClick();
+        assertTrue(Shadows.shadowOf(ime).isSoftInputVisible());
+        keyboard.performClick();
+        assertFalse(Shadows.shadowOf(ime).isSoftInputVisible());
+        assertEquals(View.VISIBLE, keys.getVisibility());
+    }
+
 
     @Test
     public void defaultKeysIncludePromptControlsAndSendShiftTabAsAKeyChord() throws Exception {
@@ -35,8 +63,9 @@ public class TermuxExtraKeysTest {
             assertEquals(7, row.length);
             for (ExtraKeyButton key : row) keys.put(key.getKey(), key);
         }
-        for (String key : new String[]{"ESC", "TAB", "SHIFT TAB", "LEFT", "UP", "DOWN", "RIGHT", "ENTER"})
+        for (String key : new String[]{"ESC", "TAB", "SHIFT TAB", "LEFT", "UP", "DOWN", "RIGHT", "ENTER", "KEYBOARD"})
             assertTrue(key, keys.containsKey(key));
+        assertFalse(keys.containsKey("-"));
         assertEquals("PGUP", keys.get("HOME").getPopup().getKey());
         assertEquals("PGDN", keys.get("END").getPopup().getKey());
 

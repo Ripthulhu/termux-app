@@ -881,6 +881,11 @@
         "name": "The Two Type Systems Rule.",
         "body": "Use scalable Material text appearances for Android controls and preserve the terminal renderer's configurable monospace typography.",
         "section": "typography"
+      },
+      {
+        "name": "Compact terminal controls.",
+        "body": "The terminal bar is 48dp with TitleMedium text and 48dp targets. Sessions has 8dp vertical clearance and scrolls as a whole when a short window cannot fit its controls. The keyboard extra key uses the shared vector and a localized description. Autocorrect and voice typing remain opt-in under Terminal I/O. The terminal inset stays black in both themes; PiP also uses a black root and window backdrop.",
+        "section": "layout"
       }
     ],
     "dos": [

@@ -182,6 +182,8 @@ The interface uses Material Design 3 on the existing Java/Android Views stack. N
 
 The terminal remains the main content. Controls have deliberate touch areas, sessions remain reachable through an explicit control, and the same session panel adapts to the available window. Dynamic color personalizes the Android chrome; a green light/dark palette supplies the static fallback. Terminal colors and fonts remain user controlled.
 
+The terminal's surrounding inset stays black in both themes. PiP also uses a black root and window backdrop; returning to the full app restores the Material surface.
+
 **Key Characteristics:**
 - Native Material 3 Views controls and semantic color roles.
 - Readable terminal content with separate Android interface typography.
@@ -227,8 +229,7 @@ Android controls use the platform `sans-serif` and `sans-serif-medium` families 
 
 The frontmatter records the library's API 21+ text appearances. Sizes and line heights are in scalable Android text units; letter spacing is in em. Platform family selection supplies regular or medium weight without a bundled font. Extra keys apply LabelMedium through TextViewCompat for API 21 compatibility and explicitly reset letter spacing to zero. Their capitalization remains the existing user property.
 
-- **Title large:** app title in the top toolbar.
-- **Title medium:** Sessions panel title.
+- **Title medium:** app title in the top toolbar and Sessions panel title.
 - **Title small:** session name, limited to two lines with end ellipsis.
 - **Body large:** the single-line terminal text-input page.
 - **Body small:** session status or terminal title, limited to one line with end ellipsis.
@@ -240,11 +241,11 @@ The frontmatter records the library's API 21+ text appearances. Sizes and line h
 
 ## Layout
 
-The root fits system windows and uses a narrow horizontal content margin (3dp). The top MaterialToolbar has a minimum height (56dp), inner horizontal padding (8dp), a single-line app title, an explicit Sessions control and a conditional visibility toggle. Icon hit areas are square (48dp).
+The root fits system windows. The terminal retains its configurable horizontal inset (3dp by default), with a black DrawerLayout background behind that inset in both themes. The app bar and extra keys span the available width rather than inheriting the terminal inset. The top MaterialToolbar is 48dp high, with inner horizontal padding (8dp), a single-line TitleMedium app title, an explicit Sessions control and a conditional visibility toggle. Icon hit areas remain square (48dp).
 
 Below the toolbar, a window narrower than the expanded breakpoint uses a start-aligned modal session panel. Its width is the smaller of 320dp and the usable root content width minus 16dp, clamped at zero; this is recalculated on every compact resize, including compact-to-compact changes. At an available content width of at least 840dp, outside picture-in-picture, the same panel is reparented beside the terminal at a fixed width (320dp). The frontmatter's panel width is therefore the compact maximum and the expanded fixed width. Terminal content and the extra-key pager receive an equal start margin in expanded mode. The open and close controls hide while the panel is persistent. Returning to compact restores the modal drawer. The breakpoint uses current window width, not device category or orientation.
 
-The panel header has a minimum height (64dp) and a padded title start (20dp). It measures the current title text plus start padding and space for three icon targets (144dp); when that exceeds the panel's available width, the title stacks above the end-aligned action row. This responds to title length, text scaling and container width rather than a second fixed window breakpoint. Its session list and bottom action group use the medium inset (12dp). Rows have a minimum height (68dp), a square number badge (32dp), a text-column gap (12dp) and a supporting-text gap (4dp). List rows are separated by a transparent gap (4dp).
+The panel has 8dp clearance above and below it in both compact and expanded modes. A fill-viewport NestedScrollView keeps its header and actions reachable in short windows; the session list retains its own scrolling and a 68dp minimum height. The header has a minimum height (56dp) and a padded title start (20dp). It measures the current title text plus start padding and space for three icon targets (144dp); when that exceeds the panel's available width, the title stacks above the end-aligned action row. This responds to title length, text scaling and container width rather than a second fixed window breakpoint. Its session list and bottom action group use the medium inset (12dp). Rows have a minimum height (68dp), a square number badge (32dp), a text-column gap (12dp) and a supporting-text gap (4dp). List rows are separated by a transparent gap (4dp).
 
 The key toolbar starts from a row unit (48dp), applies the user's height scale, clamps each row to at least 48dp, multiplies by the configured row count, then adds pager bottom padding (8dp). Each key enforces a minimum width (48dp) through both the TextView and View minimum-width properties, with horizontal margins (4dp each), internal horizontal padding (4dp), and a top/bottom shape inset (3dp). A horizontal scroll container keeps labels and targets from wrapping or squeezing into a narrow viewport. The extra-key width and height entries in the frontmatter are minimum target dimensions, not fixed clipping dimensions.
 
@@ -287,6 +288,10 @@ The conditional picture-in-picture/bubble control is a checkable Material icon b
 ### Inputs / Fields
 
 The terminal toolbar's input page remains a single-line native EditText with BodyLarge text, a hint, actionSend IME behavior, no fullscreen extraction, and zero top/bottom padding. It is not a Material outlined text field. Border, cursor and focus treatment remain inherited from the native theme; no custom field error or disabled style is introduced.
+
+The default extra-key matrix uses a keyboard icon in the former minus-key position. It shares the drawer's keyboard vector, has a localized show/hide description and uses the existing keyboard toggle action. Custom key matrices and display labels remain supported.
+
+Settings → Termux → Terminal I/O → Keyboard contains an opt-in Autocorrect and voice typing switch. It defaults off and uses the existing native preference row without an unused icon gutter. Enabling it requests normal multiline text with autocorrect while retaining no-fullscreen behavior. Gboard controls its microphone and voice permission. The terminal accepts corrections to the newly typed suffix; control keys, external input, paste and session changes discard stale correction context. Earlier text can be edited through the existing text-input page.
 
 ## Do's and Don'ts
 

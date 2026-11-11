@@ -9,6 +9,8 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.graphics.Color;
+import android.os.Build;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.text.TextUtils;
@@ -202,8 +204,10 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         if (!mActivity.isVisible()) return;
 
         String text = ShareUtils.getTextStringFromClipboardIfSet(mActivity, true);
-        if (text != null)
+        if (text != null) {
+            mActivity.getTerminalView().resetImeText();
             mActivity.getTerminalView().mEmulator.paste(text);
+        }
     }
 
     @Override
@@ -551,6 +555,7 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
             // The renderer leaves default-background cells transparent.
             mActivity.getTerminalView().setBackgroundColor(session.getEmulator().mColors.mCurrentColors[TextStyle.COLOR_INDEX_BACKGROUND]);
             mActivity.getWindow().getDecorView().setBackgroundColor(
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActivity.isInPictureInPictureMode() ? Color.BLACK :
                 com.google.android.material.color.MaterialColors.getColor(mActivity.getTerminalView(),
                     com.google.android.material.R.attr.colorSurface));
         }
